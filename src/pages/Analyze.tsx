@@ -1,12 +1,9 @@
 import { useState, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Camera, Upload } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Results } from "@/components/Results";
 import { analyzeCropImage } from "@/utils/aiAnalysis";
 import { generatePDF } from "@/utils/pdfGenerator";
+import AnalysisForm from "@/components/AnalysisForm";
 
 const Analyze = () => {
   const [image, setImage] = useState<File | null>(null);
@@ -22,24 +19,18 @@ const Analyze = () => {
   });
   const { toast } = useToast();
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.type.startsWith("image/")) {
-        setImage(file);
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setPreview(reader.result as string);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Invalid file type",
-          description: "Please upload an image file.",
-        });
-      }
-    }
+  const handleImageUpload = (file: File) => {
+    setImage(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleImageRemove = () => {
+    setImage(null);
+    setPreview("");
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,117 +98,22 @@ const Analyze = () => {
     }
   };
 
-  // ... keep existing code (render JSX)
-
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8 text-green-900">
+    <div className="container mx-auto px-4 py-8 animate-fade-in">
+      <h1 className="text-3xl font-bold text-center mb-8 text-green-900 animate-fade-in">
         Analyze Your Crop
       </h1>
 
       {!analyzing && !results ? (
-        <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-8">
-          <div className="space-y-4">
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-              {preview ? (
-                <div className="space-y-4">
-                  <img src={preview} alt="Preview" className="max-h-64 mx-auto" />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      setImage(null);
-                      setPreview("");
-                    }}
-                  >
-                    Remove Image
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <div className="flex justify-center gap-4">
-                    <label className="cursor-pointer">
-                      <Input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handleImageUpload}
-                        capture="environment"
-                      />
-                      <Button type="button" variant="outline">
-                        <Camera className="mr-2" />
-                        Capture Image
-                      </Button>
-                    </label>
-                    <label className="cursor-pointer">
-                      <Input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handleImageUpload}
-                      />
-                      <Button type="button" variant="outline">
-                        <Upload className="mr-2" />
-                        Upload Image
-                      </Button>
-                    </label>
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    Drag and drop an image here or click to upload
-                  </p>
-                </div>
-              )}
-            </div>
-
-            <div className="grid gap-4">
-              <div>
-                <Label htmlFor="name">Name *</Label>
-                <Input
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="location">Location *</Label>
-                <Input
-                  id="location"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="phone">Phone Number *</Label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="email">Email (Optional)</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                />
-              </div>
-            </div>
-          </div>
-
-          <Button type="submit" className="w-full bg-xr-green hover:bg-green-600">
-            Analyze My Crop
-          </Button>
-        </form>
+        <AnalysisForm
+          formData={formData}
+          onInputChange={handleInputChange}
+          onSubmit={handleSubmit}
+          preview={preview}
+          onImageUpload={handleImageUpload}
+          onImageRemove={handleImageRemove}
+          isSubmitting={analyzing}
+        />
       ) : (
         <div ref={resultsRef}>
           <Results isLoading={analyzing} data={results} onDownloadPDF={handleDownloadPDF} />
