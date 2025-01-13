@@ -1,53 +1,50 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Leaf, FileSpreadsheet } from "lucide-react";
+import { Zap, FileSearch, Microscope } from "lucide-react";
 
 interface AnalysisOptionsProps {
-  onOptionSelect: (option: 1 | 2) => void;
+  onOptionSelect: (option: 1 | 2 | 3) => void;
 }
 
 const AnalysisOptions = ({ onOptionSelect }: AnalysisOptionsProps) => {
   return (
-    <div className="grid gap-6 md:grid-cols-2 animate-fade-in">
-      <Card className="transition-all duration-300 hover:shadow-lg">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Leaf className="text-xr-green" />
-            Quick Analysis
-          </CardTitle>
-          <CardDescription>
-            Standard crop analysis with basic disease detection
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button 
-            onClick={() => onOptionSelect(1)}
-            className="w-full bg-xr-green hover:bg-green-600"
-          >
-            Start Quick Analysis
-          </Button>
-        </CardContent>
-      </Card>
+    <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
+      <div className="grid gap-4 md:grid-cols-3">
+        <Button
+          variant="outline"
+          className="p-8 h-auto flex flex-col gap-4 hover:bg-green-50 hover:border-green-500 transition-all duration-300"
+          onClick={() => onOptionSelect(1)}
+        >
+          <Zap className="h-12 w-12 text-green-600" />
+          <div className="space-y-2 text-center">
+            <h3 className="font-semibold">Quick Analysis</h3>
+            <p className="text-sm text-gray-500">Basic disease detection</p>
+          </div>
+        </Button>
 
-      <Card className="transition-all duration-300 hover:shadow-lg">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileSpreadsheet className="text-xr-green" />
-            Detailed Analysis
-          </CardTitle>
-          <CardDescription>
-            Comprehensive analysis with detailed report and recommendations
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button 
-            onClick={() => onOptionSelect(2)}
-            className="w-full bg-xr-green hover:bg-green-600"
-          >
-            Start Detailed Analysis
-          </Button>
-        </CardContent>
-      </Card>
+        <Button
+          variant="outline"
+          className="p-8 h-auto flex flex-col gap-4 hover:bg-green-50 hover:border-green-500 transition-all duration-300"
+          onClick={() => onOptionSelect(2)}
+        >
+          <FileSearch className="h-12 w-12 text-green-600" />
+          <div className="space-y-2 text-center">
+            <h3 className="font-semibold">Detailed Analysis</h3>
+            <p className="text-sm text-gray-500">Comprehensive report with recommendations</p>
+          </div>
+        </Button>
+
+        <Button
+          variant="outline"
+          className="p-8 h-auto flex flex-col gap-4 hover:bg-green-50 hover:border-green-500 transition-all duration-300"
+          onClick={() => onOptionSelect(3)}
+        >
+          <Microscope className="h-12 w-12 text-green-600" />
+          <div className="space-y-2 text-center">
+            <h3 className="font-semibold">Quick Test</h3>
+            <p className="text-sm text-gray-500">Mock results for testing</p>
+          </div>
+        </Button>
+      </div>
     </div>
   );
 };

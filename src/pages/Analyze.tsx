@@ -6,8 +6,31 @@ import { generatePDF } from "@/utils/pdfGenerator";
 import AnalysisForm from "@/components/AnalysisForm";
 import AnalysisOptions from "@/components/AnalysisOptions";
 
+const mockResults = {
+  diseaseName: "Maize Rust",
+  confidence: 25.49,
+  status: "critical" as const,
+  affectedArea: 30,
+  causes: [
+    "Fungal infection (Puccinia spp.)",
+    "High humidity levels in the field",
+    "Overcrowded planting leading to poor air circulation"
+  ],
+  prevention: [
+    "Ensure proper ventilation between plants",
+    "Avoid waterlogging in the fields",
+    "Rotate crops regularly to reduce fungal build-up"
+  ],
+  treatment: {
+    medicine: "Azoxystrobin",
+    dosage: "2.5 ml per liter of water",
+    frequency: "Every 10 days until symptoms subside",
+    instructions: "Apply in the early morning or evening to avoid direct sunlight. Use a sprayer for even coverage on all affected leaves."
+  }
+};
+
 const Analyze = () => {
-  const [selectedOption, setSelectedOption] = useState<1 | 2 | null>(null);
+  const [selectedOption, setSelectedOption] = useState<1 | 2 | 3 | null>(null);
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>("");
   const [analyzing, setAnalyzing] = useState(false);
@@ -21,7 +44,7 @@ const Analyze = () => {
   });
   const { toast } = useToast();
 
-  const handleOptionSelect = (option: 1 | 2) => {
+  const handleOptionSelect = (option: 1 | 2 | 3) => {
     setSelectedOption(option);
     console.log(`Selected analysis option: ${option}`);
   };
@@ -33,11 +56,21 @@ const Analyze = () => {
       setPreview(reader.result as string);
     };
     reader.readAsDataURL(file);
+
+    // If quick test option is selected, show mock results immediately
+    if (selectedOption === 3) {
+      setResults(mockResults);
+      toast({
+        title: "Analysis Complete",
+        description: "Your mock test results are ready to view.",
+      });
+    }
   };
 
   const handleImageRemove = () => {
     setImage(null);
     setPreview("");
+    setResults(null);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,14 +103,23 @@ const Analyze = () => {
 
     setAnalyzing(true);
     try {
-      const analysisResults = await analyzeCropImage(preview);
-      setResults(analysisResults);
-      toast({
-        title: "Analysis Complete",
-        description: selectedOption === 2 
-          ? "Your detailed crop analysis report is ready to view."
-          : "Your crop analysis is ready to view.",
-      });
+      // If quick test option is selected, use mock results
+      if (selectedOption === 3) {
+        setResults(mockResults);
+        toast({
+          title: "Analysis Complete",
+          description: "Your mock test results are ready to view.",
+        });
+      } else {
+        const analysisResults = await analyzeCropImage(preview);
+        setResults(analysisResults);
+        toast({
+          title: "Analysis Complete",
+          description: selectedOption === 2 
+            ? "Your detailed crop analysis report is ready to view."
+            : "Your crop analysis is ready to view.",
+        });
+      }
     } catch (error) {
       toast({
         variant: "destructive",
@@ -132,7 +174,7 @@ const Analyze = () => {
           isLoading={analyzing} 
           data={results} 
           onDownloadPDF={handleDownloadPDF}
-          isDetailedView={selectedOption === 2}
+          isDetailedView={selectedOption === 2 || selectedOption === 3}
         />
       </div>
     );
@@ -145,7 +187,9 @@ const Analyze = () => {
           ? "Choose Analysis Type" 
           : selectedOption === 1 
             ? "Quick Crop Analysis"
-            : "Detailed Crop Analysis"
+            : selectedOption === 2
+              ? "Detailed Crop Analysis"
+              : "Quick Test Analysis"
         }
       </h1>
 
