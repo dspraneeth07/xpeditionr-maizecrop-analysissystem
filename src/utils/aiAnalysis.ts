@@ -112,7 +112,6 @@ export const analyzeCropImage = async (imageData: string): Promise<AnalysisResul
   try {
     console.log("Starting image analysis...");
     
-    // Using a public model for general image classification
     const classifier = await pipeline(
       "image-classification",
       "microsoft/resnet-50"
@@ -124,13 +123,18 @@ export const analyzeCropImage = async (imageData: string): Promise<AnalysisResul
     const results = await classifier(imageData);
     console.log("Classification results:", results);
 
-    if (!Array.isArray(results) || results.length === 0) {
+    if (!Array.isArray(results)) {
+      console.error("Unexpected results format");
+      throw new Error("Unexpected results format");
+    }
+
+    if (results.length === 0) {
       console.error("No results from classification");
       throw new Error("No results from classification");
     }
 
-    // Get the top result and map it to our disease categories
-    const topResult = results[0];
+    // Get the top result and explicitly type it
+    const topResult = results[0] as { label: string; score: number };
     console.log("Top result:", topResult);
 
     // Map the classification result to our disease categories
