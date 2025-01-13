@@ -5,7 +5,7 @@ export const Hero = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-maize-gradient">
+    <div className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-maize-gradient">
       <div className="absolute inset-0 bg-black/10" />
       <div className="relative z-10 container mx-auto px-4 text-center">
         <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-up text-green-900">
