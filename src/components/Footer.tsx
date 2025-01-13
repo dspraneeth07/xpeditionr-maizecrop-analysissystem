@@ -1,4 +1,5 @@
 import { Github, Mail, Phone } from "lucide-react";
+import { Leaf } from "lucide-react";
 
 export const Footer = () => {
   return (
@@ -6,11 +7,12 @@ export const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center justify-between">
           <div className="flex items-center mb-4 md:mb-0">
-            <img 
-              src="/xr-logo.png" 
-              alt="Xpedition R Logo" 
-              className="h-12 w-auto mr-4"
-            />
+            <div className="flex items-center gap-2">
+              <Leaf className="h-8 w-8 text-xr-yellow animate-wave" />
+              <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-xr-yellow to-white">
+                XpeditionR
+              </h1>
+            </div>
           </div>
           
           <div className="flex flex-col items-center md:items-end">
