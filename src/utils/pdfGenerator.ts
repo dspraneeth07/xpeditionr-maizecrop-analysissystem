@@ -14,13 +14,6 @@ export const generatePDF = async (element: HTMLElement, results: any) => {
     `;
     document.head.appendChild(style);
     
-    // Capture the results component as an image
-    const canvas = await html2canvas(element, {
-      scale: 2,
-      logging: false,
-      useCORS: true,
-    });
-
     // Create PDF with custom formatting
     const pdf = new jsPDF({
       orientation: "portrait",
@@ -38,32 +31,44 @@ export const generatePDF = async (element: HTMLElement, results: any) => {
     pdf.setTextColor(100, 100, 100); // Gray color
     pdf.text(`Generated on: ${new Date().toLocaleString()}`, 20, 30);
     pdf.text(`Report ID: ${results.searchId}`, 20, 40);
-    pdf.text(`Disease: ${results.diseaseName}`, 20, 50);
-    pdf.text(`Status: ${results.status.toUpperCase()}`, 20, 60);
 
-    // Add user details
+    // Add user details section
+    pdf.setTextColor(60, 60, 60);
+    pdf.text("User Information:", 20, 55);
     if (results.formData) {
-      pdf.setTextColor(60, 60, 60);
-      pdf.text("User Details:", 20, 75);
-      pdf.text(`Name: ${results.formData.name}`, 25, 85);
-      pdf.text(`Location: ${results.formData.location}`, 25, 95);
-      pdf.text(`Contact: ${results.formData.phone}`, 25, 105);
+      pdf.text(`Name: ${results.formData.name}`, 25, 65);
+      pdf.text(`Location: ${results.formData.location}`, 25, 75);
+      pdf.text(`Contact: ${results.formData.phone}`, 25, 85);
       if (results.formData.email) {
-        pdf.text(`Email: ${results.formData.email}`, 25, 115);
+        pdf.text(`Email: ${results.formData.email}`, 25, 95);
       }
     }
+
+    // Add disease information
+    pdf.text("Disease Information:", 20, 110);
+    pdf.text(`Disease Name: ${results.diseaseName}`, 25, 120);
+    pdf.text(`Status: ${results.status.toUpperCase()}`, 25, 130);
+    pdf.text(`Affected Area: ${results.affectedArea}%`, 25, 140);
+
+    // Capture the results component as an image for detailed view
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      logging: false,
+      useCORS: true,
+    });
 
     // Add the captured image
     const imgData = canvas.toDataURL("image/png");
     const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    const imgWidth = pdfWidth - 40;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
     
-    pdf.addImage(imgData, "PNG", 20, 130, pdfWidth - 40, pdfHeight - 40);
+    pdf.addImage(imgData, "PNG", 20, 150, imgWidth, imgHeight);
 
     // Add footer
+    const pageHeight = pdf.internal.pageSize.getHeight();
     pdf.setFontSize(10);
     pdf.setTextColor(150, 150, 150);
-    const pageHeight = pdf.internal.pageSize.getHeight();
     pdf.text("© 2024 XpeditionR Crop Analysis System", 20, pageHeight - 10);
 
     // Remove the temporary style element

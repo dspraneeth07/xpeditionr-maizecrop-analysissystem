@@ -98,12 +98,17 @@ export const Results = ({ isLoading, data, formData, onDownloadPDF, isDetailedVi
 XpeditionR Crop Analysis Report
 Search ID: ${data.searchId}
 Disease: ${data.diseaseName}
-Status: ${data.status}
-Submitted by: ${formData.name}
+Status: ${data.status.toUpperCase()}
+Affected Area: ${data.affectedArea}%
+
+User Details:
+Name: ${formData.name}
 Location: ${formData.location}
 Contact: ${formData.phone}
 ${formData.email ? `Email: ${formData.email}` : ''}
-    `;
+
+View full report at: ${window.location.href}
+    `.trim();
     
     try {
       await navigator.share({
