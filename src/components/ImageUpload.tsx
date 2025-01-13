@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Camera, Upload } from "lucide-react";
@@ -13,11 +13,23 @@ interface ImageUploadProps {
 const ImageUpload = ({ preview, onImageUpload, onImageRemove }: ImageUploadProps) => {
   const { toast } = useToast();
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.type.startsWith("image/")) {
+        if (file.size > 10 * 1024 * 1024) {
+          toast({
+            variant: "destructive",
+            title: "File too large",
+            description: "Please upload an image smaller than 10MB",
+          });
+          return;
+        }
         onImageUpload(file);
+        toast({
+          title: "Image uploaded",
+          description: "Your image has been successfully uploaded.",
+        });
       } else {
         toast({
           variant: "destructive",
@@ -26,10 +38,32 @@ const ImageUpload = ({ preview, onImageUpload, onImageRemove }: ImageUploadProps
         });
       }
     }
+  }, [onImageUpload, toast]);
+
+  const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith("image/")) {
+      onImageUpload(file);
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Invalid file type",
+        description: "Please upload an image file.",
+      });
+    }
+  }, [onImageUpload, toast]);
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
   };
 
   return (
-    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center transition-all duration-300 hover:border-primary">
+    <div 
+      className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center transition-all duration-300 hover:border-primary"
+      onDrop={handleDrop}
+      onDragOver={handleDragOver}
+    >
       {preview ? (
         <div className="space-y-4 animate-fade-in">
           <img 
