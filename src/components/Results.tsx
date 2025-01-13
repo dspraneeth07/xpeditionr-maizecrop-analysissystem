@@ -60,11 +60,11 @@ export const Results = ({ isLoading, data, formData, onDownloadPDF, isDetailedVi
   const getStatusColor = (status: string) => {
     switch (status) {
       case "critical":
-        return "text-xr-red";
+        return "text-red-500";
       case "moderate":
-        return "text-xr-yellow";
+        return "text-yellow-500";
       case "normal":
-        return "text-xr-green";
+        return "text-green-500";
       default:
         return "text-gray-500";
     }
@@ -107,6 +107,16 @@ Location: ${formData.location}
 Contact: ${formData.phone}
 ${formData.email ? `Email: ${formData.email}` : ''}
 
+Disease Information:
+${data.causes.length > 0 ? '\nCauses:\n' + data.causes.map(cause => `- ${cause}`).join('\n') : ''}
+${data.prevention.length > 0 ? '\nPrevention Steps:\n' + data.prevention.map(step => `- ${step}`).join('\n') : ''}
+
+Treatment:
+Medicine: ${data.treatment.medicine}
+Dosage: ${data.treatment.dosage}
+Frequency: ${data.treatment.frequency}
+Instructions: ${data.treatment.instructions}
+
 View full report at: ${window.location.href}
     `.trim();
     
@@ -125,6 +135,7 @@ View full report at: ${window.location.href}
         });
       }
     } catch (err) {
+      console.error("Error sharing report:", err);
       toast({
         variant: "destructive",
         title: "Sharing failed",
@@ -207,7 +218,7 @@ View full report at: ${window.location.href}
               </div>
             </div>
 
-            {isDetailedView && (
+            {isDetailedView && data.causes.length > 0 && (
               <div className="space-y-6">
                 <div>
                   <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
@@ -226,27 +237,29 @@ View full report at: ${window.location.href}
                   </ul>
                 </div>
 
-                <div>
-                  <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                    <div className="p-2 bg-green-100 rounded-full shadow-lg">
-                      <Shield className="h-6 w-6 text-green-600" />
-                    </div>
-                    Prevention Steps
-                  </h3>
-                  <ul className="space-y-3">
-                    {data.prevention.map((step, index) => (
-                      <li key={index} className="flex items-start gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
-                        <span className="mt-2 w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-green-500 shadow-md"></span>
-                        <span className="text-gray-700">{step}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {data.prevention.length > 0 && (
+                  <div>
+                    <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                      <div className="p-2 bg-green-100 rounded-full shadow-lg">
+                        <Shield className="h-6 w-6 text-green-600" />
+                      </div>
+                      Prevention Steps
+                    </h3>
+                    <ul className="space-y-3">
+                      {data.prevention.map((step, index) => (
+                        <li key={index} className="flex items-start gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                          <span className="mt-2 w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-green-500 shadow-md"></span>
+                          <span className="text-gray-700">{step}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             )}
           </div>
 
-          {isDetailedView && (
+          {isDetailedView && data.treatment && (
             <div className="animate-fade-in">
               <h3 className="font-semibold mb-4 flex items-center gap-2">
                 <div className="p-2 bg-blue-100 rounded-full shadow-lg">
