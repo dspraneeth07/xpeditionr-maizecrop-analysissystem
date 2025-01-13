@@ -120,8 +120,7 @@ export const analyzeCropImage = async (imageData: string): Promise<AnalysisResul
     // Using a public model for plant disease detection
     const classifier = await pipeline(
       "image-classification",
-      "microsoft/resnet-50",
-      { quantized: false }
+      "microsoft/resnet-50"
     );
     
     console.log("Model loaded successfully");
