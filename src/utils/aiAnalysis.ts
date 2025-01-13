@@ -167,12 +167,17 @@ export const analyzeCropImage = async (imageData: string): Promise<AnalysisResul
     const results = await classifier(imageData);
     console.log("Classification results:", results);
 
-    if (!Array.isArray(results) || results.length === 0) {
+    if (!Array.isArray(results)) {
       throw new Error("Invalid classification results");
     }
 
     const topResult = results[0];
     console.log("Top result:", topResult);
+
+    // Type guard to ensure we have the correct properties
+    if (!('label' in topResult) || !('score' in topResult)) {
+      throw new Error("Unexpected result format from classifier");
+    }
 
     // Map visual features to diseases
     let diseaseKey: keyof typeof diseaseMapping = 'healthy';
@@ -191,7 +196,7 @@ export const analyzeCropImage = async (imageData: string): Promise<AnalysisResul
     }
 
     const mappedResult = diseaseMapping[diseaseKey];
-    const confidence = Math.round((topResult.score as number) * 100);
+    const confidence = Math.round(topResult.score * 100);
 
     return {
       ...diseaseMapping.healthy, // Default values
