@@ -95,33 +95,39 @@ const ImageUpload = ({ preview, onImageUpload, onImageRemove }: ImageUploadProps
       ) : (
         <div className="space-y-4">
           <div className="flex justify-center gap-4">
-            <label className="cursor-pointer">
+            <div className="cursor-pointer">
               <Input
                 type="file"
                 accept="image/*"
                 className="hidden"
                 onChange={handleFileChange}
                 capture="environment"
+                id="capture-input"
                 aria-label="Capture image using camera"
               />
-              <Button type="button" variant="outline" className="animate-fade-in">
-                <Camera className="mr-2" />
-                Capture Image
-              </Button>
-            </label>
-            <label className="cursor-pointer">
+              <label htmlFor="capture-input">
+                <Button type="button" variant="outline" className="animate-fade-in" onClick={() => document.getElementById('capture-input')?.click()}>
+                  <Camera className="mr-2" />
+                  Capture Image
+                </Button>
+              </label>
+            </div>
+            <div className="cursor-pointer">
               <Input
                 type="file"
                 accept="image/*"
                 className="hidden"
                 onChange={handleFileChange}
+                id="upload-input"
                 aria-label="Upload image from device"
               />
-              <Button type="button" variant="outline" className="animate-fade-in">
-                <Upload className="mr-2" />
-                Upload Image
-              </Button>
-            </label>
+              <label htmlFor="upload-input">
+                <Button type="button" variant="outline" className="animate-fade-in" onClick={() => document.getElementById('upload-input')?.click()}>
+                  <Upload className="mr-2" />
+                  Upload Image
+                </Button>
+              </label>
+            </div>
           </div>
           <p className="text-sm text-gray-500 animate-fade-in">
             Drag and drop an image here or click to upload
