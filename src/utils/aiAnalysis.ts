@@ -114,7 +114,7 @@ export const analyzeCropImage = async (imageData: string): Promise<AnalysisResul
     
     const classifier = await pipeline(
       "image-classification",
-      "microsoft/resnet-50"
+      "Xenova/vit-base-patch16-224"
     );
     
     console.log("Model loaded successfully");
