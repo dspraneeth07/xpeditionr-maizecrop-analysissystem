@@ -41,12 +41,24 @@ export const generatePDF = async (element: HTMLElement, results: any) => {
     pdf.text(`Disease: ${results.diseaseName}`, 20, 50);
     pdf.text(`Status: ${results.status.toUpperCase()}`, 20, 60);
 
+    // Add user details
+    if (results.formData) {
+      pdf.setTextColor(60, 60, 60);
+      pdf.text("User Details:", 20, 75);
+      pdf.text(`Name: ${results.formData.name}`, 25, 85);
+      pdf.text(`Location: ${results.formData.location}`, 25, 95);
+      pdf.text(`Contact: ${results.formData.phone}`, 25, 105);
+      if (results.formData.email) {
+        pdf.text(`Email: ${results.formData.email}`, 25, 115);
+      }
+    }
+
     // Add the captured image
     const imgData = canvas.toDataURL("image/png");
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
     
-    pdf.addImage(imgData, "PNG", 20, 70, pdfWidth - 40, pdfHeight - 40);
+    pdf.addImage(imgData, "PNG", 20, 130, pdfWidth - 40, pdfHeight - 40);
 
     // Add footer
     pdf.setFontSize(10);

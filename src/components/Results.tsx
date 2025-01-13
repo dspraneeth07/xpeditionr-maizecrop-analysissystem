@@ -92,19 +92,38 @@ export const Results = ({ isLoading, data, formData, onDownloadPDF, isDetailedVi
   const StatusIcon = data.status === "critical" ? AlertCircle : CheckCircle;
 
   const handleShare = async () => {
-    if (!data) return;
+    if (!data || !formData) return;
+    
+    const shareText = `
+XpeditionR Crop Analysis Report
+Search ID: ${data.searchId}
+Disease: ${data.diseaseName}
+Status: ${data.status}
+Submitted by: ${formData.name}
+Location: ${formData.location}
+Contact: ${formData.phone}
+${formData.email ? `Email: ${formData.email}` : ''}
+    `;
     
     try {
       await navigator.share({
-        title: 'Crop Analysis Report',
-        text: `Check out my crop analysis report for ${data.diseaseName}`,
+        title: 'XpeditionR Crop Analysis Report',
+        text: shareText,
         url: window.location.href
       });
     } catch (err) {
-      toast({
-        title: "Sharing failed",
-        description: "Could not share the report. Try copying the URL manually.",
-        variant: "destructive"
+      // Fallback for browsers that don't support native sharing
+      navigator.clipboard.writeText(shareText).then(() => {
+        toast({
+          title: "Report copied to clipboard",
+          description: "You can now paste and share the report details.",
+        });
+      }).catch(() => {
+        toast({
+          title: "Sharing failed",
+          description: "Could not share the report. Try copying the URL manually.",
+          variant: "destructive"
+        });
       });
     }
   };
@@ -114,43 +133,47 @@ export const Results = ({ isLoading, data, formData, onDownloadPDF, isDetailedVi
   };
 
   return (
-    <div className="space-y-6 p-4 animate-fade-in print:p-0">
+    <div className="space-y-8 p-6 max-w-4xl mx-auto animate-fade-in print:p-0">
       <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg">
-        <CardHeader className={`${getStatusBg(data.status)} border-b`}>
+        <CardHeader className={`${getStatusBg(data.status)} border-b py-6`}>
           <div className="flex justify-between items-start">
             <div>
-              <CardTitle className="flex items-center gap-2">
-                <StatusIcon className={`${getStatusColor(data.status)} animate-pulse`} />
+              <CardTitle className="flex items-center gap-2 text-2xl mb-2">
+                <StatusIcon className={`${getStatusColor(data.status)} animate-pulse h-8 w-8`} />
                 {data.diseaseName}
               </CardTitle>
-              <CardDescription className="font-semibold">
+              <CardDescription className="font-semibold text-lg">
                 Search ID: {data.searchId}
               </CardDescription>
             </div>
           </div>
         </CardHeader>
 
-        <CardContent className="space-y-6 pt-6">
+        <CardContent className="space-y-8 pt-6">
           {formData && (
-            <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg animate-fade-in">
-              <div className="flex items-center gap-2">
-                <User className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-600">{formData.name}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-600">{formData.location}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-600">{formData.phone}</span>
-              </div>
-              {formData.email && (
-                <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm text-gray-600">{formData.email}</span>
+            <div className="grid md:grid-cols-2 gap-6 p-6 bg-gradient-to-br from-gray-50 to-white rounded-lg shadow-inner animate-fade-in">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <User className="h-5 w-5 text-green-600" />
+                  <span className="text-gray-700 font-medium">{formData.name}</span>
                 </div>
-              )}
+                <div className="flex items-center gap-3">
+                  <MapPin className="h-5 w-5 text-green-600" />
+                  <span className="text-gray-700">{formData.location}</span>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <Phone className="h-5 w-5 text-green-600" />
+                  <span className="text-gray-700">{formData.phone}</span>
+                </div>
+                {formData.email && (
+                  <div className="flex items-center gap-3">
+                    <Mail className="h-5 w-5 text-green-600" />
+                    <span className="text-gray-700">{formData.email}</span>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -203,22 +226,43 @@ export const Results = ({ isLoading, data, formData, onDownloadPDF, isDetailedVi
 
           {isDetailedView && (
             <>
-              <div className="space-y-4 animate-fade-in">
-                <div>
-                  <h3 className="font-semibold mb-2 flex items-center gap-2">
-                    <div className="p-2 bg-green-100 rounded-full shadow-lg transform hover:scale-110 transition-transform">
-                      <Shield className="h-5 w-5 text-green-600" />
-                    </div>
-                    Prevention Steps
-                  </h3>
-                  <ul className="list-none pl-5 space-y-2">
-                    {data.prevention.map((step, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                        <span className="inline-block w-2 h-2 mt-2 rounded-full bg-gradient-to-r from-green-400 to-green-500 shadow-md"></span>
-                        <span className="text-gray-700">{step}</span>
-                      </li>
-                    ))}
-                  </ul>
+              <div className="grid md:grid-cols-2 gap-8 pt-4">
+                <div className="space-y-6 animate-fade-in">
+                  <div>
+                    <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                      <div className="p-2 bg-red-100 rounded-full shadow-lg">
+                        <Bug className="h-6 w-6 text-red-600" />
+                      </div>
+                      Causes
+                    </h3>
+                    <ul className="space-y-3">
+                      {data.causes.map((cause, index) => (
+                        <li key={index} className="flex items-start gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                          <span className="mt-2 w-2 h-2 rounded-full bg-gradient-to-r from-red-400 to-red-500 shadow-md"></span>
+                          <span className="text-gray-700">{cause}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="space-y-6 animate-fade-in">
+                  <div>
+                    <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                      <div className="p-2 bg-green-100 rounded-full shadow-lg">
+                        <Shield className="h-6 w-6 text-green-600" />
+                      </div>
+                      Prevention Steps
+                    </h3>
+                    <ul className="space-y-3">
+                      {data.prevention.map((step, index) => (
+                        <li key={index} className="flex items-start gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                          <span className="mt-2 w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-green-500 shadow-md"></span>
+                          <span className="text-gray-700">{step}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
 
@@ -269,30 +313,30 @@ export const Results = ({ isLoading, data, formData, onDownloadPDF, isDetailedVi
         </CardContent>
       </Card>
 
-      <div className="flex gap-4 print:hidden">
+      <div className="flex flex-col sm:flex-row gap-4 print:hidden">
         <Button 
-          className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all duration-300 hover:scale-[1.02] animate-fade-in" 
+          className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all duration-300 hover:scale-[1.02] animate-fade-in py-6" 
           onClick={handleCheckOther}
         >
-          <Search className="mr-2" />
+          <Search className="mr-2 h-5 w-5" />
           Check Other
         </Button>
         
         {isDetailedView && (
           <Button 
-            className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transition-all duration-300 hover:scale-[1.02] animate-fade-in" 
+            className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transition-all duration-300 hover:scale-[1.02] animate-fade-in py-6" 
             onClick={onDownloadPDF}
           >
-            <Download className="mr-2" />
+            <Download className="mr-2 h-5 w-5" />
             Download PDF
           </Button>
         )}
         
         <Button 
-          className="flex-1 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 transition-all duration-300 hover:scale-[1.02] animate-fade-in" 
+          className="flex-1 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 transition-all duration-300 hover:scale-[1.02] animate-fade-in py-6" 
           onClick={handleShare}
         >
-          <Share2 className="mr-2" />
+          <Share2 className="mr-2 h-5 w-5" />
           Share Report
         </Button>
       </div>
