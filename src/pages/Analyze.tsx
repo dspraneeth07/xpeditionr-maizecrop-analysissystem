@@ -6,8 +6,14 @@ import { generatePDF } from "@/utils/pdfGenerator";
 import AnalysisForm from "@/components/AnalysisForm";
 import AnalysisOptions from "@/components/AnalysisOptions";
 
+const generateUniqueId = () => {
+  const timestamp = Date.now().toString(36);
+  const randomStr = Math.random().toString(36).substring(2, 8);
+  return `XR-${timestamp}-${randomStr}`.toUpperCase();
+};
+
 const mockResults = {
-  searchId: `XR${Date.now().toString().slice(-6)}`,
+  searchId: generateUniqueId(),
   diseaseName: "Maize Rust",
   confidence: 25.49,
   status: "critical" as const,
@@ -104,16 +110,23 @@ const Analyze = () => {
 
     setAnalyzing(true);
     try {
-      // If quick test option is selected, use mock results
       if (selectedOption === 3) {
-        setResults(mockResults);
+        const resultsWithId = {
+          ...mockResults,
+          searchId: generateUniqueId(),
+        };
+        setResults(resultsWithId);
         toast({
           title: "Analysis Complete",
           description: "Your mock test results are ready to view.",
         });
       } else {
         const analysisResults = await analyzeCropImage(preview);
-        setResults(analysisResults);
+        const resultsWithId = {
+          ...analysisResults,
+          searchId: generateUniqueId(),
+        };
+        setResults(resultsWithId);
         toast({
           title: "Analysis Complete",
           description: selectedOption === 2 

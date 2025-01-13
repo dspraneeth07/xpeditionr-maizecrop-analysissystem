@@ -90,6 +90,8 @@ export const Results = ({ isLoading, data, formData, onDownloadPDF, isDetailedVi
   };
 
   const StatusIcon = data.status === "critical" ? AlertCircle : CheckCircle;
+  const baseUrl = window.location.origin;
+  const resultUrl = `${baseUrl}/results/${data.searchId}`;
 
   return (
     <div className="space-y-6 p-4 animate-fade-in">
@@ -101,13 +103,13 @@ export const Results = ({ isLoading, data, formData, onDownloadPDF, isDetailedVi
                 <StatusIcon className={`${getStatusColor(data.status)} animate-pulse`} />
                 {data.diseaseName}
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="font-semibold">
                 Search ID: {data.searchId}
               </CardDescription>
             </div>
             <div className="p-2 bg-white rounded-lg shadow-md">
               <QRCodeSVG 
-                value={`https://yourwebsite.com/results/${data.searchId}`} 
+                value={resultUrl}
                 size={64}
                 level="H"
                 includeMargin={true}
@@ -117,7 +119,6 @@ export const Results = ({ isLoading, data, formData, onDownloadPDF, isDetailedVi
         </CardHeader>
 
         <CardContent className="space-y-6 pt-6">
-          {/* User Details Section */}
           {formData && (
             <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg animate-fade-in">
               <div className="flex items-center gap-2">

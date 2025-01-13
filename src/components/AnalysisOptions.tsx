@@ -23,13 +23,16 @@ const AnalysisOptions = ({ onOptionSelect }: AnalysisOptionsProps) => {
 
         <Button
           variant="outline"
-          className="group p-8 h-auto flex flex-col gap-4 hover:bg-maize-gradient border-2 transition-all duration-500 hover:scale-105 hover:shadow-xl hover:border-green-500"
+          className="group p-8 h-auto flex flex-col gap-4 hover:bg-gradient-to-br from-yellow-100 via-green-100 to-green-200 border-2 transition-all duration-500 hover:scale-105 hover:shadow-xl hover:border-green-500"
           onClick={() => onOptionSelect(2)}
         >
           <FileSearch className="h-12 w-12 text-green-600 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12" />
           <div className="space-y-2 text-center">
             <h3 className="font-semibold">Detailed Analysis</h3>
-            <p className="text-sm text-gray-500 px-2">Comprehensive report with recommendations</p>
+            <p className="text-sm text-gray-500 flex flex-col">
+              <span>Comprehensive Report</span>
+              <span>with Recommendations</span>
+            </p>
           </div>
         </Button>
 
