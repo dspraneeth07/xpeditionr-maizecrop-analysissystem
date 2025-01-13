@@ -16,54 +16,120 @@ interface AnalysisResult {
 }
 
 const diseaseMapping: Record<string, Partial<AnalysisResult>> = {
-  "plant": {
-    diseaseName: "Common Plant Disease",
-    status: "moderate",
-    affectedArea: 45,
+  "leaf_blight": {
+    diseaseName: "Leaf Blight Disease",
+    status: "critical",
+    affectedArea: 75,
     causes: [
-      "Environmental stress",
+      "Fungal pathogen (Helminthosporium sp.)",
+      "High humidity conditions",
+      "Poor air circulation",
+      "Extended leaf wetness",
       "Nutrient deficiency",
-      "Pest infestation",
-      "Fungal infection",
-      "Poor soil conditions"
+      "Stressed plants"
     ],
     prevention: [
-      "Regular monitoring of plant health",
-      "Proper watering schedule",
-      "Balanced fertilization",
-      "Good air circulation",
-      "Clean gardening tools"
+      "Use disease-resistant varieties",
+      "Implement crop rotation with non-host crops",
+      "Maintain proper plant spacing",
+      "Ensure good drainage in fields",
+      "Remove and destroy infected plant debris",
+      "Apply balanced fertilization",
+      "Monitor humidity levels",
+      "Use drip irrigation instead of overhead watering"
     ],
     treatment: {
-      medicine: "Neem oil solution",
-      dosage: "2-3 tablespoons per gallon of water",
-      frequency: "Every 7-14 days",
-      instructions: "Apply early morning or late evening. Ensure complete coverage of affected areas."
+      medicine: "Propiconazole + Difenoconazole fungicide",
+      dosage: "1.5-2 ml per liter of water",
+      frequency: "Every 14 days until symptoms improve",
+      instructions: "Apply early morning or late evening. Ensure complete coverage of foliage. Stop application 14 days before harvest."
     },
   },
-  "leaf": {
-    diseaseName: "Leaf Spot Disease",
-    status: "critical",
-    affectedArea: 65,
+  "powdery_mildew": {
+    diseaseName: "Powdery Mildew",
+    status: "moderate",
+    affectedArea: 55,
     causes: [
-      "Fungal pathogens",
-      "High humidity",
+      "Fungal infection (Erysiphe sp.)",
+      "Warm, dry conditions",
       "Poor air circulation",
-      "Water splashing",
-      "Overcrowded plants"
+      "High relative humidity",
+      "Dense canopy",
+      "Overcrowding of plants"
     ],
     prevention: [
-      "Improve air circulation",
-      "Avoid overhead watering",
-      "Remove infected leaves",
-      "Maintain plant spacing",
-      "Use disease-resistant varieties"
+      "Plant resistant varieties",
+      "Increase plant spacing",
+      "Prune to improve air circulation",
+      "Avoid overhead irrigation",
+      "Remove infected plant parts",
+      "Maintain proper soil fertility",
+      "Use companion planting",
+      "Regular monitoring of plants"
     ],
     treatment: {
-      medicine: "Copper fungicide",
-      dosage: "1-2 teaspoons per gallon of water",
+      medicine: "Sulfur-based fungicide or Azoxystrobin",
+      dosage: "2-3 g per liter of water",
       frequency: "Every 7-10 days",
-      instructions: "Spray all plant surfaces until thoroughly wet. Apply in dry conditions."
+      instructions: "Apply at first sign of infection. Do not apply sulfur when temperatures exceed 85°F (29°C)."
+    },
+  },
+  "bacterial_spot": {
+    diseaseName: "Bacterial Spot Disease",
+    status: "critical",
+    affectedArea: 80,
+    causes: [
+      "Bacterial infection (Xanthomonas sp.)",
+      "Warm, wet weather",
+      "Splashing water",
+      "Contaminated seeds",
+      "Poor sanitation",
+      "Mechanical injury"
+    ],
+    prevention: [
+      "Use certified disease-free seeds",
+      "Practice crop rotation",
+      "Avoid overhead irrigation",
+      "Maintain field sanitation",
+      "Remove infected plants",
+      "Clean tools between uses",
+      "Improve air circulation",
+      "Monitor weather conditions"
+    ],
+    treatment: {
+      medicine: "Copper-based bactericide + Mancozeb",
+      dosage: "2.5-3 g per liter of water",
+      frequency: "Every 5-7 days during severe infection",
+      instructions: "Apply before disease development. Alternate with other approved bactericides to prevent resistance."
+    },
+  },
+  "rust": {
+    diseaseName: "Rust Disease",
+    status: "moderate",
+    affectedArea: 60,
+    causes: [
+      "Fungal pathogen (Puccinia sp.)",
+      "High humidity",
+      "Moderate temperatures",
+      "Poor air circulation",
+      "Presence of alternate hosts",
+      "Extended dew periods"
+    ],
+    prevention: [
+      "Plant resistant varieties",
+      "Remove alternate host plants",
+      "Improve air circulation",
+      "Avoid overhead irrigation",
+      "Space plants properly",
+      "Regular monitoring",
+      "Maintain proper nutrition",
+      "Time planting to avoid disease-favorable conditions"
+    ],
+    treatment: {
+      medicine: "Tebuconazole or Trifloxystrobin fungicide",
+      dosage: "1-1.5 ml per liter of water",
+      frequency: "Every 10-14 days",
+      instructions: "Begin applications at first sign of disease. Rotate fungicides to prevent resistance development."
     },
   },
   "healthy": {
@@ -73,10 +139,13 @@ const diseaseMapping: Record<string, Partial<AnalysisResult>> = {
     causes: [],
     prevention: [
       "Continue regular monitoring",
-      "Maintain good agricultural practices",
-      "Follow recommended fertilization schedule",
+      "Maintain balanced fertilization",
       "Practice proper irrigation",
-      "Regular soil testing"
+      "Implement integrated pest management",
+      "Keep good air circulation",
+      "Regular soil testing",
+      "Proper pruning practices",
+      "Maintain field sanitation"
     ],
     treatment: {
       medicine: "No treatment needed",
@@ -88,22 +157,29 @@ const diseaseMapping: Record<string, Partial<AnalysisResult>> = {
   "default": {
     diseaseName: "Unknown Condition",
     status: "moderate",
-    affectedArea: 30,
+    affectedArea: 40,
     causes: [
       "Multiple potential factors",
       "Environmental stress",
-      "Possible pathogen infection"
+      "Possible pathogen infection",
+      "Nutrient imbalance",
+      "Water management issues"
     ],
     prevention: [
       "Regular plant inspection",
       "Maintain proper growing conditions",
-      "Consult with local agricultural expert"
+      "Balanced fertilization program",
+      "Proper irrigation management",
+      "Integrated pest management",
+      "Consult with agricultural expert",
+      "Document symptoms and progression",
+      "Take soil and tissue samples for analysis"
     ],
     treatment: {
-      medicine: "General purpose fungicide/insecticide",
+      medicine: "Broad-spectrum fungicide/bactericide",
       dosage: "As per product label",
-      frequency: "As needed",
-      instructions: "Consult with local agricultural expert for specific recommendations"
+      frequency: "Based on severity and product guidelines",
+      instructions: "Consult with agricultural expert for specific recommendations. Monitor response to treatment."
     },
   }
 };
@@ -133,7 +209,6 @@ export const analyzeCropImage = async (imageData: string): Promise<AnalysisResul
       throw new Error("No results from classification");
     }
 
-    // Get the top result and explicitly type it
     const topResult = results[0] as { label: string; score: number };
     console.log("Top result:", topResult);
 
@@ -141,10 +216,14 @@ export const analyzeCropImage = async (imageData: string): Promise<AnalysisResul
     let diseaseKey: keyof typeof diseaseMapping = 'default';
     
     const label = topResult.label.toLowerCase();
-    if (label.includes('plant')) {
-      diseaseKey = 'plant';
-    } else if (label.includes('leaf') || label.includes('foliage')) {
-      diseaseKey = 'leaf';
+    if (label.includes('blight') || label.includes('lesion')) {
+      diseaseKey = 'leaf_blight';
+    } else if (label.includes('mildew') || label.includes('white')) {
+      diseaseKey = 'powdery_mildew';
+    } else if (label.includes('spot') || label.includes('bacterial')) {
+      diseaseKey = 'bacterial_spot';
+    } else if (label.includes('rust') || label.includes('brown')) {
+      diseaseKey = 'rust';
     } else if (label.includes('healthy') || label.includes('normal')) {
       diseaseKey = 'healthy';
     }
