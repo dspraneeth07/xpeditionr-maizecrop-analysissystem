@@ -1,29 +1,36 @@
 import { pipeline } from "@huggingface/transformers";
-import { allDiseases, DiseaseInfo } from "./diseaseDefinitions";
+import { allDiseases, DiseaseInfo, DiseaseKey } from "./diseaseDefinitions";
 
 interface AnalysisResult extends DiseaseInfo {
   confidence: number;
 }
 
-const detectDisease = (label: string): keyof typeof allDiseases => {
+const detectDisease = (label: string): DiseaseKey => {
   const normalizedLabel = label.toLowerCase();
-  
-  if (normalizedLabel.includes('healthy')) return 'healthy';
   
   // Detect fungal diseases
   if (normalizedLabel.includes('rust')) {
     return normalizedLabel.includes('southern') ? 'southern_rust' : 'common_rust';
   }
-  if (normalizedLabel.includes('blight')) return 'northern_blight';
-  if (normalizedLabel.includes('spot')) return 'gray_leaf_spot';
+  if (normalizedLabel.includes('blight')) {
+    return 'northern_leaf_blight';
+  }
+  if (normalizedLabel.includes('spot')) {
+    return 'gray_leaf_spot';
+  }
   
   // Detect bacterial diseases
-  if (normalizedLabel.includes('wilt')) return 'goss_wilt';
-  if (normalizedLabel.includes('streak')) return 'bacterial_leaf_streak';
+  if (normalizedLabel.includes('wilt')) {
+    return 'goss_wilt';
+  }
+  if (normalizedLabel.includes('streak')) {
+    return 'bacterial_leaf_streak';
+  }
   
   // Detect viral diseases
-  if (normalizedLabel.includes('mosaic')) return 'maize_dwarf';
-  if (normalizedLabel.includes('virus')) return 'maize_dwarf';
+  if (normalizedLabel.includes('mosaic') || normalizedLabel.includes('virus')) {
+    return 'maize_dwarf';
+  }
   
   // Detect nutritional disorders
   if (normalizedLabel.includes('deficiency')) {

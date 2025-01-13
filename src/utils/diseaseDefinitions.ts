@@ -1,6 +1,9 @@
+export type DiseaseStatus = "critical" | "moderate" | "normal";
+export type DiseaseKey = keyof typeof allDiseases;
+
 export interface DiseaseInfo {
   diseaseName: string;
-  status: "critical" | "moderate" | "normal";
+  status: DiseaseStatus;
   affectedArea: number;
   causes: string[];
   prevention: string[];
@@ -57,7 +60,48 @@ export const fungalDiseases: Record<string, DiseaseInfo> = {
       instructions: "Apply at first sign of disease"
     }
   },
-  // Add more fungal diseases...
+  northern_leaf_blight: {
+    diseaseName: "Northern Corn Leaf Blight",
+    status: "critical",
+    affectedArea: 65,
+    causes: [
+      "Fungal pathogen (Exserohilum turcicum)",
+      "Cool, moist conditions",
+      "Poor air circulation"
+    ],
+    prevention: [
+      "Resistant hybrids",
+      "Crop rotation",
+      "Residue management"
+    ],
+    treatment: {
+      medicine: "Triazole fungicides",
+      dosage: "300-400 ml/ha",
+      frequency: "10-14 days interval",
+      instructions: "Apply when disease first appears"
+    }
+  },
+  gray_leaf_spot: {
+    diseaseName: "Gray Leaf Spot",
+    status: "critical",
+    affectedArea: 60,
+    causes: [
+      "Fungal pathogen (Cercospora zeae-maydis)",
+      "High humidity",
+      "Warm temperatures"
+    ],
+    prevention: [
+      "Resistant varieties",
+      "Crop rotation",
+      "Improved air circulation"
+    ],
+    treatment: {
+      medicine: "Strobilurin fungicides",
+      dosage: "350-500 ml/ha",
+      frequency: "14-21 days interval",
+      instructions: "Apply preventively in high-risk areas"
+    }
+  }
 };
 
 export const bacterialDiseases: Record<string, DiseaseInfo> = {
@@ -82,7 +126,27 @@ export const bacterialDiseases: Record<string, DiseaseInfo> = {
       instructions: "Apply preventively during high-risk periods"
     }
   },
-  // Add more bacterial diseases...
+  bacterial_leaf_streak: {
+    diseaseName: "Bacterial Leaf Streak",
+    status: "critical",
+    affectedArea: 55,
+    causes: [
+      "Xanthomonas vasicola",
+      "High humidity",
+      "Leaf wetness"
+    ],
+    prevention: [
+      "Resistant varieties",
+      "Proper irrigation",
+      "Field sanitation"
+    ],
+    treatment: {
+      medicine: "Copper hydroxide",
+      dosage: "2.0-2.5 kg/ha",
+      frequency: "7-14 days interval",
+      instructions: "Apply early in disease development"
+    }
+  }
 };
 
 export const viralDiseases: Record<string, DiseaseInfo> = {
@@ -106,8 +170,7 @@ export const viralDiseases: Record<string, DiseaseInfo> = {
       frequency: "Monitor aphid population",
       instructions: "Focus on vector control and prevention"
     }
-  },
-  // Add more viral diseases...
+  }
 };
 
 export const nutritionalDisorders: Record<string, DiseaseInfo> = {
@@ -132,7 +195,48 @@ export const nutritionalDisorders: Record<string, DiseaseInfo> = {
       instructions: "Apply based on growth stage and soil tests"
     }
   },
-  // Add more nutritional disorders...
+  phosphorus_deficiency: {
+    diseaseName: "Phosphorus Deficiency",
+    status: "moderate",
+    affectedArea: 40,
+    causes: [
+      "Low soil pH",
+      "Cool soil temperatures",
+      "Poor root development"
+    ],
+    prevention: [
+      "Soil pH management",
+      "Band application",
+      "Starter fertilizers"
+    ],
+    treatment: {
+      medicine: "Triple superphosphate",
+      dosage: "60-80 kg P2O5/ha",
+      frequency: "Pre-plant application",
+      instructions: "Apply in bands near seed placement"
+    }
+  },
+  potassium_deficiency: {
+    diseaseName: "Potassium Deficiency",
+    status: "moderate",
+    affectedArea: 35,
+    causes: [
+      "Sandy soils",
+      "High rainfall",
+      "Soil compaction"
+    ],
+    prevention: [
+      "Regular soil testing",
+      "Balanced fertilization",
+      "Proper tillage"
+    ],
+    treatment: {
+      medicine: "Potassium chloride",
+      dosage: "100-120 kg K2O/ha",
+      frequency: "Split application",
+      instructions: "Apply based on soil test results"
+    }
+  }
 };
 
 export const allDiseases = {
