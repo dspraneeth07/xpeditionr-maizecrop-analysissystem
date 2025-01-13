@@ -1,6 +1,5 @@
-import { CheckCircle, AlertCircle, Download, Bug, Shield, Syringe, Leaf, User, MapPin, Phone, Mail } from "lucide-react";
+import { CheckCircle, AlertCircle, Download, Bug, Shield, Syringe, Leaf, User, MapPin, Phone, Mail, Share2, Search } from "lucide-react";
 import { Button } from "./ui/button";
-import { QRCodeSVG } from "qrcode.react";
 import {
   Card,
   CardContent,
@@ -9,6 +8,7 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Progress } from "./ui/progress";
+import { toast } from "./ui/use-toast";
 
 interface ResultsProps {
   isLoading?: boolean;
@@ -90,11 +90,31 @@ export const Results = ({ isLoading, data, formData, onDownloadPDF, isDetailedVi
   };
 
   const StatusIcon = data.status === "critical" ? AlertCircle : CheckCircle;
-  const baseUrl = window.location.origin;
-  const resultUrl = `${baseUrl}/results/${data.searchId}`;
+
+  const handleShare = async () => {
+    if (!data) return;
+    
+    try {
+      await navigator.share({
+        title: 'Crop Analysis Report',
+        text: `Check out my crop analysis report for ${data.diseaseName}`,
+        url: window.location.href
+      });
+    } catch (err) {
+      toast({
+        title: "Sharing failed",
+        description: "Could not share the report. Try copying the URL manually.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleCheckOther = () => {
+    window.location.href = '/analyze';
+  };
 
   return (
-    <div className="space-y-6 p-4 animate-fade-in">
+    <div className="space-y-6 p-4 animate-fade-in print:p-0">
       <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg">
         <CardHeader className={`${getStatusBg(data.status)} border-b`}>
           <div className="flex justify-between items-start">
@@ -106,14 +126,6 @@ export const Results = ({ isLoading, data, formData, onDownloadPDF, isDetailedVi
               <CardDescription className="font-semibold">
                 Search ID: {data.searchId}
               </CardDescription>
-            </div>
-            <div className="p-2 bg-white rounded-lg shadow-md">
-              <QRCodeSVG 
-                value={resultUrl}
-                size={64}
-                level="H"
-                includeMargin={true}
-              />
             </div>
           </div>
         </CardHeader>
@@ -257,15 +269,33 @@ export const Results = ({ isLoading, data, formData, onDownloadPDF, isDetailedVi
         </CardContent>
       </Card>
 
-      {isDetailedView && (
+      <div className="flex gap-4 print:hidden">
         <Button 
-          className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transition-all duration-300 hover:scale-[1.02] animate-fade-in" 
-          onClick={onDownloadPDF}
+          className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all duration-300 hover:scale-[1.02] animate-fade-in" 
+          onClick={handleCheckOther}
         >
-          <Download className="mr-2" />
-          Download Detailed PDF Report
+          <Search className="mr-2" />
+          Check Other
         </Button>
-      )}
+        
+        {isDetailedView && (
+          <Button 
+            className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transition-all duration-300 hover:scale-[1.02] animate-fade-in" 
+            onClick={onDownloadPDF}
+          >
+            <Download className="mr-2" />
+            Download PDF
+          </Button>
+        )}
+        
+        <Button 
+          className="flex-1 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 transition-all duration-300 hover:scale-[1.02] animate-fade-in" 
+          onClick={handleShare}
+        >
+          <Share2 className="mr-2" />
+          Share Report
+        </Button>
+      </div>
     </div>
   );
 };
