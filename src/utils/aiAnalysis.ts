@@ -6,8 +6,7 @@ export const initializeModel = async () => {
   if (!classifier) {
     classifier = await pipeline(
       "image-classification",
-      "Xenova/crop-disease-detection",
-      { quantized: true }
+      "Xenova/crop-disease-detection"
     );
   }
   return classifier;
