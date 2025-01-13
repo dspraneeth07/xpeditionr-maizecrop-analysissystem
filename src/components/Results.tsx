@@ -120,9 +120,9 @@ ${formData.email ? `Email: ${formData.email}` : ''}
         });
       }).catch(() => {
         toast({
+          variant: "destructive",
           title: "Sharing failed",
           description: "Could not share the report. Try copying the URL manually.",
-          variant: "destructive"
         });
       });
     }
