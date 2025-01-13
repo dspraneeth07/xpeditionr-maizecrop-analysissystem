@@ -29,7 +29,7 @@ const AnalysisOptions = ({ onOptionSelect }: AnalysisOptionsProps) => {
           <FileSearch className="h-12 w-12 text-green-600 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12" />
           <div className="space-y-2 text-center">
             <h3 className="font-semibold">Detailed Analysis</h3>
-            <p className="text-sm text-gray-500">Comprehensive report with recommendations</p>
+            <p className="text-sm text-gray-500 px-2">Comprehensive report with recommendations</p>
           </div>
         </Button>
 

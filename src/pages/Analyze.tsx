@@ -7,6 +7,7 @@ import AnalysisForm from "@/components/AnalysisForm";
 import AnalysisOptions from "@/components/AnalysisOptions";
 
 const mockResults = {
+  searchId: `XR${Date.now().toString().slice(-6)}`,
   diseaseName: "Maize Rust",
   confidence: 25.49,
   status: "critical" as const,

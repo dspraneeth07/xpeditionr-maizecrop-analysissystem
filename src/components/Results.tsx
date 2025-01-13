@@ -1,5 +1,6 @@
-import { CheckCircle, AlertCircle, Download, Bug, Shield, Syringe, Leaf } from "lucide-react";
+import { CheckCircle, AlertCircle, Download, Bug, Shield, Syringe, Leaf, User, MapPin, Phone, Mail } from "lucide-react";
 import { Button } from "./ui/button";
+import { QRCodeSVG } from "qrcode.react";
 import {
   Card,
   CardContent,
@@ -12,7 +13,14 @@ import { Progress } from "./ui/progress";
 interface ResultsProps {
   isLoading?: boolean;
   isDetailedView?: boolean;
+  formData?: {
+    name: string;
+    location: string;
+    phone: string;
+    email?: string;
+  };
   data?: {
+    searchId: string;
     diseaseName: string;
     confidence: number;
     status: "critical" | "moderate" | "normal";
@@ -29,7 +37,7 @@ interface ResultsProps {
   onDownloadPDF?: () => void;
 }
 
-export const Results = ({ isLoading, data, onDownloadPDF, isDetailedView }: ResultsProps) => {
+export const Results = ({ isLoading, data, formData, onDownloadPDF, isDetailedView }: ResultsProps) => {
   if (isLoading) {
     return (
       <div className="text-center space-y-4 p-8 animate-fade-in">
@@ -76,9 +84,9 @@ export const Results = ({ isLoading, data, onDownloadPDF, isDetailedView }: Resu
   };
 
   const getAffectedAreaGradient = (percentage: number) => {
-    if (percentage > 66) return "bg-gradient-to-r from-red-500 to-red-600";
-    if (percentage > 33) return "bg-gradient-to-r from-yellow-400 to-yellow-500";
-    return "bg-gradient-to-r from-green-400 to-green-500";
+    if (percentage > 66) return "bg-gradient-to-r from-red-500 via-red-600 to-red-700";
+    if (percentage > 33) return "bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600";
+    return "bg-gradient-to-r from-green-400 via-green-500 to-green-600";
   };
 
   const StatusIcon = data.status === "critical" ? AlertCircle : CheckCircle;
@@ -87,19 +95,52 @@ export const Results = ({ isLoading, data, onDownloadPDF, isDetailedView }: Resu
     <div className="space-y-6 p-4 animate-fade-in">
       <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg">
         <CardHeader className={`${getStatusBg(data.status)} border-b`}>
-          <CardTitle className="flex items-center gap-2">
-            <StatusIcon className={`${getStatusColor(data.status)} animate-pulse`} />
-            {data.diseaseName}
-          </CardTitle>
-          <CardDescription>
-            Confidence Level: {data.confidence}%
-            <Progress 
-              value={data.confidence} 
-              className={`mt-2 ${data.confidence > 70 ? "bg-green-500" : "bg-yellow-500"}`}
-            />
-          </CardDescription>
+          <div className="flex justify-between items-start">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <StatusIcon className={`${getStatusColor(data.status)} animate-pulse`} />
+                {data.diseaseName}
+              </CardTitle>
+              <CardDescription>
+                Search ID: {data.searchId}
+              </CardDescription>
+            </div>
+            <div className="p-2 bg-white rounded-lg shadow-md">
+              <QRCodeSVG 
+                value={`https://yourwebsite.com/results/${data.searchId}`} 
+                size={64}
+                level="H"
+                includeMargin={true}
+              />
+            </div>
+          </div>
         </CardHeader>
+
         <CardContent className="space-y-6 pt-6">
+          {/* User Details Section */}
+          {formData && (
+            <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg animate-fade-in">
+              <div className="flex items-center gap-2">
+                <User className="h-4 w-4 text-gray-500" />
+                <span className="text-sm text-gray-600">{formData.name}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-gray-500" />
+                <span className="text-sm text-gray-600">{formData.location}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-gray-500" />
+                <span className="text-sm text-gray-600">{formData.phone}</span>
+              </div>
+              {formData.email && (
+                <div className="flex items-center gap-2">
+                  <Mail className="h-4 w-4 text-gray-500" />
+                  <span className="text-sm text-gray-600">{formData.email}</span>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="grid gap-6 md:grid-cols-2">
             <div className="space-y-4">
               <div className="animate-fade-in">
@@ -116,7 +157,7 @@ export const Results = ({ isLoading, data, onDownloadPDF, isDetailedView }: Resu
                 <div className="relative pt-1">
                   <Progress 
                     value={data.affectedArea} 
-                    className={`h-2 ${getAffectedAreaGradient(data.affectedArea)}`} 
+                    className={`h-3 rounded-full ${getAffectedAreaGradient(data.affectedArea)}`} 
                   />
                   <span className="text-sm text-gray-600 mt-1 inline-block">
                     {data.affectedArea}% of crop affected
@@ -137,7 +178,7 @@ export const Results = ({ isLoading, data, onDownloadPDF, isDetailedView }: Resu
                   <ul className="list-none pl-5 space-y-2">
                     {data.causes.map((cause, index) => (
                       <li key={index} className="flex items-start gap-2">
-                        <span className="inline-block w-2 h-2 mt-2 rounded-full bg-red-400"></span>
+                        <span className="inline-block w-2 h-2 mt-2 rounded-full bg-gradient-to-r from-red-400 to-red-500 shadow-md"></span>
                         <span className="text-gray-700">{cause}</span>
                       </li>
                     ))}
@@ -160,7 +201,7 @@ export const Results = ({ isLoading, data, onDownloadPDF, isDetailedView }: Resu
                   <ul className="list-none pl-5 space-y-2">
                     {data.prevention.map((step, index) => (
                       <li key={index} className="flex items-start gap-2">
-                        <span className="inline-block w-2 h-2 mt-2 rounded-full bg-green-400"></span>
+                        <span className="inline-block w-2 h-2 mt-2 rounded-full bg-gradient-to-r from-green-400 to-green-500 shadow-md"></span>
                         <span className="text-gray-700">{step}</span>
                       </li>
                     ))}
@@ -180,28 +221,28 @@ export const Results = ({ isLoading, data, onDownloadPDF, isDetailedView }: Resu
                     <div className="grid gap-4 md:grid-cols-2">
                       <div className="space-y-2">
                         <p className="font-medium flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                          <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 shadow-md"></span>
                           Medicine
                         </p>
                         <p className="text-gray-700 pl-4">{data.treatment.medicine}</p>
                       </div>
                       <div className="space-y-2">
                         <p className="font-medium flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                          <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 shadow-md"></span>
                           Dosage
                         </p>
                         <p className="text-gray-700 pl-4">{data.treatment.dosage}</p>
                       </div>
                       <div className="space-y-2">
                         <p className="font-medium flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                          <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 shadow-md"></span>
                           Frequency
                         </p>
                         <p className="text-gray-700 pl-4">{data.treatment.frequency}</p>
                       </div>
                       <div className="space-y-2">
                         <p className="font-medium flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                          <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 shadow-md"></span>
                           Instructions
                         </p>
                         <p className="text-gray-700 pl-4">{data.treatment.instructions}</p>
