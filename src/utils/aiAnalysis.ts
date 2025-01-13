@@ -16,80 +16,54 @@ interface AnalysisResult {
 }
 
 const diseaseMapping: Record<string, Partial<AnalysisResult>> = {
-  "northern_leaf_blight": {
-    diseaseName: "Northern Leaf Blight",
-    status: "critical",
-    affectedArea: 75,
-    causes: [
-      "Fungal pathogen Exserohilum turcicum",
-      "Humid conditions (>90% humidity)",
-      "Temperature between 18-27°C",
-      "Poor air circulation",
-      "Previous crop debris"
-    ],
-    prevention: [
-      "Use resistant maize varieties",
-      "Implement crop rotation with non-host crops",
-      "Remove and destroy infected plant debris",
-      "Maintain proper plant spacing",
-      "Apply balanced fertilization",
-      "Use fungicide seed treatments"
-    ],
-    treatment: {
-      medicine: "Propiconazole",
-      dosage: "500ml/hectare",
-      frequency: "Every 14 days",
-      instructions: "Apply during early morning or late evening. Ensure complete coverage of leaves."
-    },
-  },
-  "common_rust": {
-    diseaseName: "Common Rust",
+  "plant": {
+    diseaseName: "Common Plant Disease",
     status: "moderate",
     affectedArea: 45,
     causes: [
-      "Fungal pathogen Puccinia sorghi",
-      "Cool temperatures (16-23°C)",
-      "High humidity",
-      "Extended leaf wetness",
-      "Wind-dispersed spores"
+      "Environmental stress",
+      "Nutrient deficiency",
+      "Pest infestation",
+      "Fungal infection",
+      "Poor soil conditions"
     ],
     prevention: [
-      "Plant resistant varieties",
-      "Early planting to avoid peak disease periods",
-      "Monitor fields regularly",
-      "Proper spacing for air circulation",
-      "Avoid overhead irrigation"
+      "Regular monitoring of plant health",
+      "Proper watering schedule",
+      "Balanced fertilization",
+      "Good air circulation",
+      "Clean gardening tools"
     ],
     treatment: {
-      medicine: "Azoxystrobin",
-      dosage: "300ml/hectare",
-      frequency: "Every 10-14 days",
-      instructions: "Apply before disease pressure becomes severe. Rotate fungicides to prevent resistance."
+      medicine: "Neem oil solution",
+      dosage: "2-3 tablespoons per gallon of water",
+      frequency: "Every 7-14 days",
+      instructions: "Apply early morning or late evening. Ensure complete coverage of affected areas."
     },
   },
-  "gray_leaf_spot": {
-    diseaseName: "Gray Leaf Spot",
+  "leaf": {
+    diseaseName: "Leaf Spot Disease",
     status: "critical",
     affectedArea: 65,
     causes: [
-      "Fungal pathogen Cercospora zeae-maydis",
-      "High humidity and temperature",
-      "Continuous corn cultivation",
-      "No-till farming practices",
-      "Poor field drainage"
+      "Fungal pathogens",
+      "High humidity",
+      "Poor air circulation",
+      "Water splashing",
+      "Overcrowded plants"
     ],
     prevention: [
-      "Use resistant hybrids",
-      "Rotate crops for 2 years",
-      "Improve field drainage",
-      "Control weeds",
-      "Deep plowing of crop residue"
+      "Improve air circulation",
+      "Avoid overhead watering",
+      "Remove infected leaves",
+      "Maintain plant spacing",
+      "Use disease-resistant varieties"
     ],
     treatment: {
-      medicine: "Pyraclostrobin + Metconazole",
-      dosage: "750ml/hectare",
-      frequency: "Every 21 days",
-      instructions: "Begin applications at disease onset. Ensure thorough coverage of all plant surfaces."
+      medicine: "Copper fungicide",
+      dosage: "1-2 teaspoons per gallon of water",
+      frequency: "Every 7-10 days",
+      instructions: "Spray all plant surfaces until thoroughly wet. Apply in dry conditions."
     },
   },
   "healthy": {
@@ -101,23 +75,44 @@ const diseaseMapping: Record<string, Partial<AnalysisResult>> = {
       "Continue regular monitoring",
       "Maintain good agricultural practices",
       "Follow recommended fertilization schedule",
-      "Practice proper irrigation management",
-      "Implement integrated pest management"
+      "Practice proper irrigation",
+      "Regular soil testing"
     ],
     treatment: {
-      medicine: "None required",
+      medicine: "No treatment needed",
       dosage: "N/A",
       frequency: "N/A",
       instructions: "Continue regular maintenance and monitoring"
     },
   },
+  "default": {
+    diseaseName: "Unknown Condition",
+    status: "moderate",
+    affectedArea: 30,
+    causes: [
+      "Multiple potential factors",
+      "Environmental stress",
+      "Possible pathogen infection"
+    ],
+    prevention: [
+      "Regular plant inspection",
+      "Maintain proper growing conditions",
+      "Consult with local agricultural expert"
+    ],
+    treatment: {
+      medicine: "General purpose fungicide/insecticide",
+      dosage: "As per product label",
+      frequency: "As needed",
+      instructions: "Consult with local agricultural expert for specific recommendations"
+    },
+  }
 };
 
 export const analyzeCropImage = async (imageData: string): Promise<AnalysisResult> => {
   try {
     console.log("Starting image analysis...");
     
-    // Using a public model for plant disease detection
+    // Using a public model for general image classification
     const classifier = await pipeline(
       "image-classification",
       "microsoft/resnet-50"
@@ -134,39 +129,30 @@ export const analyzeCropImage = async (imageData: string): Promise<AnalysisResul
       throw new Error("No results from classification");
     }
 
-    // Type assertion for the classification result
-    const topResult = results[0] as { label: string; score: number };
+    // Get the top result and map it to our disease categories
+    const topResult = results[0];
     console.log("Top result:", topResult);
 
-    // Map the result to our disease categories
-    // For demo purposes, we'll map any plant-related classification to our disease categories
-    let diseaseKey: keyof typeof diseaseMapping = 'healthy';
+    // Map the classification result to our disease categories
+    let diseaseKey: keyof typeof diseaseMapping = 'default';
     
-    if (topResult.label.toLowerCase().includes('disease') || 
-        topResult.label.toLowerCase().includes('blight') ||
-        topResult.label.toLowerCase().includes('rust')) {
-      diseaseKey = 'northern_leaf_blight';
-    } else if (topResult.label.toLowerCase().includes('spot')) {
-      diseaseKey = 'gray_leaf_spot';
+    const label = topResult.label.toLowerCase();
+    if (label.includes('plant')) {
+      diseaseKey = 'plant';
+    } else if (label.includes('leaf') || label.includes('foliage')) {
+      diseaseKey = 'leaf';
+    } else if (label.includes('healthy') || label.includes('normal')) {
+      diseaseKey = 'healthy';
     }
 
-    const mappedResult = diseaseMapping[diseaseKey] || diseaseMapping.healthy;
+    const mappedResult = diseaseMapping[diseaseKey];
 
     return {
+      ...diseaseMapping.default,
       ...mappedResult,
-      diseaseName: mappedResult.diseaseName || "Unknown Disease",
       confidence: Math.round(topResult.score * 100),
-      status: mappedResult.status || "normal",
-      affectedArea: mappedResult.affectedArea || 0,
-      causes: mappedResult.causes || [],
-      prevention: mappedResult.prevention || [],
-      treatment: mappedResult.treatment || {
-        medicine: "Unknown",
-        dosage: "Unknown",
-        frequency: "Unknown",
-        instructions: "Please consult an agricultural expert",
-      },
     } as AnalysisResult;
+
   } catch (error) {
     console.error("Error during image analysis:", error);
     throw new Error("Failed to analyze image. Please try again.");
