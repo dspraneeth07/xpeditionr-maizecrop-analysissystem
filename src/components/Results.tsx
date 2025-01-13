@@ -25,9 +25,10 @@ interface ResultsProps {
       instructions: string;
     };
   };
+  onDownloadPDF?: () => void;
 }
 
-export const Results = ({ isLoading, data }: ResultsProps) => {
+export const Results = ({ isLoading, data, onDownloadPDF }: ResultsProps) => {
   if (isLoading) {
     return (
       <div className="text-center space-y-4 p-8">
@@ -115,7 +116,7 @@ export const Results = ({ isLoading, data }: ResultsProps) => {
         </CardContent>
       </Card>
 
-      <Button className="w-full" onClick={() => {/* TODO: Implement PDF generation */}}>
+      <Button className="w-full" onClick={onDownloadPDF}>
         <Download className="mr-2" />
         Download PDF Report
       </Button>

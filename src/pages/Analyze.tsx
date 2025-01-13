@@ -1,16 +1,19 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Camera, Upload } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Results } from "@/components/Results";
+import { analyzeCropImage } from "@/utils/aiAnalysis";
+import { generatePDF } from "@/utils/pdfGenerator";
 
 const Analyze = () => {
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>("");
   const [analyzing, setAnalyzing] = useState(false);
   const [results, setResults] = useState<any>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
   const [formData, setFormData] = useState({
     name: "",
     location: "",
@@ -68,35 +71,43 @@ const Analyze = () => {
     }
 
     setAnalyzing(true);
-    // Simulated API call
-    setTimeout(() => {
-      setResults({
-        diseaseName: "Northern Corn Leaf Blight",
-        confidence: 95,
-        status: "moderate",
-        affectedArea: 30,
-        causes: [
-          "Fungal infection (Exserohilum turcicum)",
-          "High humidity conditions",
-          "Poor air circulation",
-        ],
-        prevention: [
-          "Rotate crops with non-host plants",
-          "Remove crop debris after harvest",
-          "Improve field drainage",
-          "Use resistant maize varieties",
-        ],
-        treatment: {
-          medicine: "Propiconazole",
-          dosage: "1.5-2 ml/liter of water",
-          frequency: "Every 7-14 days",
-          instructions:
-            "Apply during early morning or late evening. Ensure complete coverage of leaves. Repeat application if symptoms persist.",
-        },
+    try {
+      const analysisResults = await analyzeCropImage(preview);
+      setResults(analysisResults);
+      toast({
+        title: "Analysis Complete",
+        description: "Your crop analysis is ready to view.",
       });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Analysis Failed",
+        description: "Failed to analyze the image. Please try again.",
+      });
+    } finally {
       setAnalyzing(false);
-    }, 3000);
+    }
   };
+
+  const handleDownloadPDF = async () => {
+    if (!resultsRef.current || !results) return;
+    
+    try {
+      await generatePDF(resultsRef.current, results);
+      toast({
+        title: "Success",
+        description: "PDF report has been generated and downloaded.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "PDF Generation Failed",
+        description: "Failed to generate PDF report. Please try again.",
+      });
+    }
+  };
+
+  // ... keep existing code (render JSX)
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -208,7 +219,9 @@ const Analyze = () => {
           </Button>
         </form>
       ) : (
-        <Results isLoading={analyzing} data={results} />
+        <div ref={resultsRef}>
+          <Results isLoading={analyzing} data={results} onDownloadPDF={handleDownloadPDF} />
+        </div>
       )}
     </div>
   );
