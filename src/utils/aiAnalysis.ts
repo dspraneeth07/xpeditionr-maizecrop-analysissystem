@@ -74,7 +74,7 @@ export const analyzeCropImage = async (imageData: string): Promise<AnalysisResul
     console.log("Model loaded successfully");
     
     const results = await classifier(imageData, {
-      topk: 5, // Get top 5 predictions to better detect disease patterns
+      top_k: 5, // Changed from topk to top_k
     });
     
     console.log("Classification results:", results);
