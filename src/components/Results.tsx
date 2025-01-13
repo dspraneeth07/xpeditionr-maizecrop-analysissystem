@@ -153,7 +153,7 @@ View full report at: ${window.location.href}
       <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg">
         <CardHeader className={`${getStatusBg(data.status)} border-b py-6`}>
           <div className="flex justify-between items-start">
-            <div>
+            <div className="text-left">
               <CardTitle className="flex items-center gap-2 text-2xl mb-2">
                 <StatusIcon className={`${getStatusColor(data.status)} animate-pulse h-8 w-8`} />
                 {data.diseaseName}
@@ -194,8 +194,8 @@ View full report at: ${window.location.href}
           )}
 
           <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-4">
-              <div>
+            <div className="space-y-6">
+              <div className="text-left">
                 <h3 className="font-semibold mb-2 flex items-center gap-2">
                   <span className={`inline-block w-2 h-2 rounded-full ${getStatusColor(data.status)}`}></span>
                   Status
@@ -204,7 +204,7 @@ View full report at: ${window.location.href}
                   {data.status}
                 </p>
               </div>
-              <div>
+              <div className="text-left">
                 <h3 className="font-semibold mb-2">Affected Area</h3>
                 <div className="relative pt-1">
                   <Progress 
@@ -220,17 +220,17 @@ View full report at: ${window.location.href}
 
             {isDetailedView && data.causes.length > 0 && (
               <div className="space-y-6">
-                <div>
+                <div className="text-left">
                   <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                    <div className="p-2 bg-red-100 rounded-full shadow-lg">
+                    <div className="p-2 bg-red-100 rounded-full">
                       <Bug className="h-6 w-6 text-red-600" />
                     </div>
                     Causes
                   </h3>
-                  <ul className="space-y-3">
+                  <ul className="space-y-3 pl-2">
                     {data.causes.map((cause, index) => (
                       <li key={index} className="flex items-start gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
-                        <span className="mt-2 w-2 h-2 rounded-full bg-gradient-to-r from-red-400 to-red-500 shadow-md"></span>
+                        <span className="mt-2 w-2 h-2 rounded-full bg-gradient-to-r from-red-400 to-red-500"></span>
                         <span className="text-gray-700">{cause}</span>
                       </li>
                     ))}
@@ -238,17 +238,17 @@ View full report at: ${window.location.href}
                 </div>
 
                 {data.prevention.length > 0 && (
-                  <div>
+                  <div className="text-left mt-8">
                     <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                      <div className="p-2 bg-green-100 rounded-full shadow-lg">
+                      <div className="p-2 bg-green-100 rounded-full">
                         <Shield className="h-6 w-6 text-green-600" />
                       </div>
                       Prevention Steps
                     </h3>
-                    <ul className="space-y-3">
+                    <ul className="space-y-3 pl-2">
                       {data.prevention.map((step, index) => (
                         <li key={index} className="flex items-start gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
-                          <span className="mt-2 w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-green-500 shadow-md"></span>
+                          <span className="mt-2 w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-green-500"></span>
                           <span className="text-gray-700">{step}</span>
                         </li>
                       ))}
@@ -260,40 +260,40 @@ View full report at: ${window.location.href}
           </div>
 
           {isDetailedView && data.treatment && (
-            <div className="animate-fade-in">
+            <div className="animate-fade-in text-left">
               <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <div className="p-2 bg-blue-100 rounded-full shadow-lg">
+                <div className="p-2 bg-blue-100 rounded-full">
                   <Syringe className="h-5 w-5 text-blue-600" />
                 </div>
                 Treatment Recommendations
               </h3>
               <Card className="bg-gradient-to-br from-white to-blue-50">
                 <CardContent className="pt-6">
-                  <div className="grid gap-4 md:grid-cols-2">
+                  <div className="grid gap-6 md:grid-cols-2">
                     <div className="space-y-2">
                       <p className="font-medium flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 shadow-md"></span>
+                        <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500"></span>
                         Medicine
                       </p>
                       <p className="text-gray-700 pl-4">{data.treatment.medicine}</p>
                     </div>
                     <div className="space-y-2">
                       <p className="font-medium flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 shadow-md"></span>
+                        <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500"></span>
                         Dosage
                       </p>
                       <p className="text-gray-700 pl-4">{data.treatment.dosage}</p>
                     </div>
                     <div className="space-y-2">
                       <p className="font-medium flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 shadow-md"></span>
+                        <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500"></span>
                         Frequency
                       </p>
                       <p className="text-gray-700 pl-4">{data.treatment.frequency}</p>
                     </div>
                     <div className="space-y-2">
                       <p className="font-medium flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 shadow-md"></span>
+                        <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500"></span>
                         Instructions
                       </p>
                       <p className="text-gray-700 pl-4">{data.treatment.instructions}</p>
