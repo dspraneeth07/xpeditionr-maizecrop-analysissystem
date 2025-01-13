@@ -204,41 +204,50 @@ View full report at: ${window.location.href}
                   {data.status}
                 </p>
               </div>
-              <div className="text-left">
-                <h3 className="font-semibold mb-2">Affected Area</h3>
-                <div className="relative pt-1">
-                  <Progress 
-                    value={data.affectedArea} 
-                    className={`h-3 rounded-full ${getAffectedAreaGradient(data.affectedArea)}`} 
-                  />
-                  <span className="text-sm text-gray-600 mt-1 inline-block">
-                    {data.affectedArea}% of crop affected
-                  </span>
-                </div>
+            </div>
+          </div>
+
+          <div className="text-center">
+            <h3 className="font-semibold mb-2">Affected Area</h3>
+            <div className="max-w-md mx-auto">
+              <div className="relative pt-1">
+                <Progress 
+                  value={data.affectedArea} 
+                  className={`h-3 rounded-full ${getAffectedAreaGradient(data.affectedArea)}`} 
+                />
+                <span className="text-sm text-gray-600 mt-1 block">
+                  {data.affectedArea}% of crop affected
+                </span>
               </div>
             </div>
+          </div>
 
-            {isDetailedView && data.causes.length > 0 && (
-              <div className="space-y-6">
-                <div className="text-left">
-                  <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                    <div className="p-2 bg-red-100 rounded-full">
-                      <Bug className="h-6 w-6 text-red-600" />
-                    </div>
-                    Causes
-                  </h3>
-                  <ul className="space-y-3 pl-2">
-                    {data.causes.map((cause, index) => (
-                      <li key={index} className="flex items-start gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
-                        <span className="mt-2 w-2 h-2 rounded-full bg-gradient-to-r from-red-400 to-red-500"></span>
-                        <span className="text-gray-700">{cause}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+          {isDetailedView && (
+            <div className="grid md:grid-cols-2 gap-8">
+              {data.causes.length > 0 && (
+                <Card className="bg-gradient-to-br from-white to-red-50">
+                  <CardContent className="pt-6">
+                    <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                      <div className="p-2 bg-red-100 rounded-full">
+                        <Bug className="h-6 w-6 text-red-600" />
+                      </div>
+                      Causes
+                    </h3>
+                    <ul className="space-y-3 pl-2">
+                      {data.causes.map((cause, index) => (
+                        <li key={index} className="flex items-start gap-3 p-2 hover:bg-red-50/50 rounded-lg transition-colors">
+                          <span className="mt-2 w-2 h-2 rounded-full bg-gradient-to-r from-red-400 to-red-500"></span>
+                          <span className="text-gray-700">{cause}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              )}
 
-                {data.prevention.length > 0 && (
-                  <div className="text-left mt-8">
+              {data.prevention.length > 0 && (
+                <Card className="bg-gradient-to-br from-white to-green-50">
+                  <CardContent className="pt-6">
                     <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
                       <div className="p-2 bg-green-100 rounded-full">
                         <Shield className="h-6 w-6 text-green-600" />
@@ -247,17 +256,17 @@ View full report at: ${window.location.href}
                     </h3>
                     <ul className="space-y-3 pl-2">
                       {data.prevention.map((step, index) => (
-                        <li key={index} className="flex items-start gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                        <li key={index} className="flex items-start gap-3 p-2 hover:bg-green-50/50 rounded-lg transition-colors">
                           <span className="mt-2 w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-green-500"></span>
                           <span className="text-gray-700">{step}</span>
                         </li>
                       ))}
                     </ul>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
 
           {isDetailedView && data.treatment && (
             <div className="animate-fade-in text-left">
