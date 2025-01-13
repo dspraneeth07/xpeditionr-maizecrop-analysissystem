@@ -127,7 +127,8 @@ export const analyzeCropImage = async (imageData: string): Promise<AnalysisResul
       throw new Error("No results from classification");
     }
 
-    const topResult = results[0];
+    // Type assertion for the classification result
+    const topResult = results[0] as { label: string; score: number };
     const mappedResult = diseaseMapping[topResult.label as keyof typeof diseaseMapping] || diseaseMapping.healthy;
 
     return {

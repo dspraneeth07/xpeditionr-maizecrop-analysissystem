@@ -83,8 +83,7 @@ export const Results = ({ isLoading, data, onDownloadPDF }: ResultsProps) => {
             Confidence Level: {data.confidence}%
             <Progress 
               value={data.confidence} 
-              className="mt-2"
-              indicatorClassName={data.confidence > 70 ? "bg-green-500" : "bg-yellow-500"}
+              className={`mt-2 ${data.confidence > 70 ? "bg-green-500" : "bg-yellow-500"}`}
             />
           </CardDescription>
         </CardHeader>
