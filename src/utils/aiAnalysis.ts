@@ -16,171 +16,139 @@ interface AnalysisResult {
 }
 
 const diseaseMapping: Record<string, Partial<AnalysisResult>> = {
-  "leaf_blight": {
-    diseaseName: "Leaf Blight Disease",
+  "common_rust": {
+    diseaseName: "Common Rust (Puccinia sorghi)",
     status: "critical",
     affectedArea: 75,
     causes: [
-      "Fungal pathogen (Helminthosporium sp.)",
-      "High humidity conditions",
-      "Poor air circulation",
-      "Extended leaf wetness",
-      "Nutrient deficiency",
-      "Stressed plants"
+      "Fungal pathogen (Puccinia sorghi)",
+      "Cool temperatures (60-70°F)",
+      "High humidity (>95%)",
+      "Extended leaf wetness periods",
+      "Poor air circulation"
     ],
     prevention: [
-      "Use disease-resistant varieties",
-      "Implement crop rotation with non-host crops",
+      "Plant rust-resistant hybrids",
+      "Early planting to avoid optimal disease conditions",
+      "Improve field drainage",
       "Maintain proper plant spacing",
-      "Ensure good drainage in fields",
-      "Remove and destroy infected plant debris",
-      "Apply balanced fertilization",
-      "Monitor humidity levels",
-      "Use drip irrigation instead of overhead watering"
+      "Regular field monitoring",
+      "Crop rotation with non-host crops",
+      "Remove volunteer corn plants",
+      "Balanced fertilization program"
     ],
     treatment: {
-      medicine: "Propiconazole + Difenoconazole fungicide",
-      dosage: "1.5-2 ml per liter of water",
-      frequency: "Every 14 days until symptoms improve",
-      instructions: "Apply early morning or late evening. Ensure complete coverage of foliage. Stop application 14 days before harvest."
-    },
+      medicine: "Azoxystrobin + Propiconazole fungicide",
+      dosage: "400-600 ml/ha",
+      frequency: "Apply at first sign of disease, repeat after 14-21 days if needed",
+      instructions: "Apply before disease reaches 5% of leaf area. Ensure complete coverage. Observe pre-harvest interval of 30 days."
+    }
   },
-  "powdery_mildew": {
-    diseaseName: "Powdery Mildew",
-    status: "moderate",
-    affectedArea: 55,
-    causes: [
-      "Fungal infection (Erysiphe sp.)",
-      "Warm, dry conditions",
-      "Poor air circulation",
-      "High relative humidity",
-      "Dense canopy",
-      "Overcrowding of plants"
-    ],
-    prevention: [
-      "Plant resistant varieties",
-      "Increase plant spacing",
-      "Prune to improve air circulation",
-      "Avoid overhead irrigation",
-      "Remove infected plant parts",
-      "Maintain proper soil fertility",
-      "Use companion planting",
-      "Regular monitoring of plants"
-    ],
-    treatment: {
-      medicine: "Sulfur-based fungicide or Azoxystrobin",
-      dosage: "2-3 g per liter of water",
-      frequency: "Every 7-10 days",
-      instructions: "Apply at first sign of infection. Do not apply sulfur when temperatures exceed 85°F (29°C)."
-    },
-  },
-  "bacterial_spot": {
-    diseaseName: "Bacterial Spot Disease",
+  "northern_blight": {
+    diseaseName: "Northern Corn Leaf Blight",
     status: "critical",
     affectedArea: 80,
     causes: [
-      "Bacterial infection (Xanthomonas sp.)",
-      "Warm, wet weather",
-      "Splashing water",
-      "Contaminated seeds",
-      "Poor sanitation",
-      "Mechanical injury"
+      "Fungal pathogen (Exserohilum turcicum)",
+      "Moderate temperatures (64-81°F)",
+      "Extended periods of leaf wetness",
+      "High humidity",
+      "Previous crop debris"
     ],
     prevention: [
-      "Use certified disease-free seeds",
-      "Practice crop rotation",
-      "Avoid overhead irrigation",
-      "Maintain field sanitation",
-      "Remove infected plants",
-      "Clean tools between uses",
+      "Use resistant hybrids",
+      "Implement crop rotation",
+      "Practice deep plowing",
+      "Remove crop debris",
       "Improve air circulation",
-      "Monitor weather conditions"
+      "Avoid overhead irrigation",
+      "Monitor disease forecasting systems",
+      "Maintain balanced soil fertility"
     ],
     treatment: {
-      medicine: "Copper-based bactericide + Mancozeb",
-      dosage: "2.5-3 g per liter of water",
-      frequency: "Every 5-7 days during severe infection",
-      instructions: "Apply before disease development. Alternate with other approved bactericides to prevent resistance."
-    },
+      medicine: "Pyraclostrobin + Metconazole",
+      dosage: "0.75-1.0 L/ha",
+      frequency: "Apply at disease onset, repeat after 14 days if conditions favor disease",
+      instructions: "Apply when disease is less than 5% on upper leaves. Use higher rates under severe disease pressure."
+    }
   },
-  "rust": {
-    diseaseName: "Rust Disease",
+  "gray_leaf_spot": {
+    diseaseName: "Gray Leaf Spot",
     status: "moderate",
     affectedArea: 60,
     causes: [
-      "Fungal pathogen (Puccinia sp.)",
-      "High humidity",
-      "Moderate temperatures",
-      "Poor air circulation",
-      "Presence of alternate hosts",
-      "Extended dew periods"
+      "Fungal pathogen (Cercospora zeae-maydis)",
+      "High humidity (>95%)",
+      "Temperatures between 70-90°F",
+      "Continuous corn cultivation",
+      "Conservation tillage practices"
     ],
     prevention: [
-      "Plant resistant varieties",
-      "Remove alternate host plants",
+      "Plant resistant hybrids",
+      "Rotate with non-host crops",
       "Improve air circulation",
-      "Avoid overhead irrigation",
-      "Space plants properly",
-      "Regular monitoring",
-      "Maintain proper nutrition",
-      "Time planting to avoid disease-favorable conditions"
+      "Reduce surface residue",
+      "Avoid susceptible hybrids in high-risk areas",
+      "Scout fields regularly",
+      "Time planting to avoid optimal conditions",
+      "Maintain proper soil fertility"
     ],
     treatment: {
-      medicine: "Tebuconazole or Trifloxystrobin fungicide",
-      dosage: "1-1.5 ml per liter of water",
-      frequency: "Every 10-14 days",
-      instructions: "Begin applications at first sign of disease. Rotate fungicides to prevent resistance development."
-    },
+      medicine: "Trifloxystrobin + Prothioconazole",
+      dosage: "300-400 ml/ha",
+      frequency: "Apply at first symptoms, repeat after 21 days if needed",
+      instructions: "Best results when applied before disease establishment. Ensure thorough coverage of all leaf surfaces."
+    }
+  },
+  "ear_rot": {
+    diseaseName: "Fusarium Ear Rot",
+    status: "critical",
+    affectedArea: 85,
+    causes: [
+      "Fungal pathogen (Fusarium verticillioides)",
+      "High temperatures",
+      "Drought stress",
+      "Insect damage",
+      "Rain during silking"
+    ],
+    prevention: [
+      "Select resistant hybrids",
+      "Avoid mechanical injury",
+      "Control insects",
+      "Harvest early",
+      "Proper drying and storage",
+      "Maintain optimal plant density",
+      "Avoid plant stress",
+      "Practice good sanitation"
+    ],
+    treatment: {
+      medicine: "Fludioxonil + Mefenoxam seed treatment",
+      dosage: "100g/100kg of seeds",
+      frequency: "Preventive seed treatment before planting",
+      instructions: "Treat seeds before planting. Monitor moisture levels during storage. Remove infected ears promptly."
+    }
   },
   "healthy": {
-    diseaseName: "Healthy Plant",
+    diseaseName: "Healthy Corn Plant",
     status: "normal",
     affectedArea: 0,
     causes: [],
     prevention: [
-      "Continue regular monitoring",
       "Maintain balanced fertilization",
-      "Practice proper irrigation",
-      "Implement integrated pest management",
-      "Keep good air circulation",
-      "Regular soil testing",
-      "Proper pruning practices",
-      "Maintain field sanitation"
+      "Regular monitoring",
+      "Proper irrigation management",
+      "Integrated pest management",
+      "Soil testing",
+      "Crop rotation",
+      "Proper plant spacing",
+      "Timely weed control"
     ],
     treatment: {
       medicine: "No treatment needed",
       dosage: "N/A",
-      frequency: "N/A",
-      instructions: "Continue regular maintenance and monitoring"
-    },
-  },
-  "default": {
-    diseaseName: "Unknown Condition",
-    status: "moderate",
-    affectedArea: 40,
-    causes: [
-      "Multiple potential factors",
-      "Environmental stress",
-      "Possible pathogen infection",
-      "Nutrient imbalance",
-      "Water management issues"
-    ],
-    prevention: [
-      "Regular plant inspection",
-      "Maintain proper growing conditions",
-      "Balanced fertilization program",
-      "Proper irrigation management",
-      "Integrated pest management",
-      "Consult with agricultural expert",
-      "Document symptoms and progression",
-      "Take soil and tissue samples for analysis"
-    ],
-    treatment: {
-      medicine: "Broad-spectrum fungicide/bactericide",
-      dosage: "As per product label",
-      frequency: "Based on severity and product guidelines",
-      instructions: "Consult with agricultural expert for specific recommendations. Monitor response to treatment."
-    },
+      frequency: "Continue regular monitoring",
+      instructions: "Maintain current agricultural practices and preventive measures"
+    }
   }
 };
 
@@ -199,41 +167,36 @@ export const analyzeCropImage = async (imageData: string): Promise<AnalysisResul
     const results = await classifier(imageData);
     console.log("Classification results:", results);
 
-    if (!Array.isArray(results)) {
-      console.error("Unexpected results format");
-      throw new Error("Unexpected results format");
+    if (!Array.isArray(results) || results.length === 0) {
+      throw new Error("Invalid classification results");
     }
 
-    if (results.length === 0) {
-      console.error("No results from classification");
-      throw new Error("No results from classification");
-    }
-
-    const topResult = results[0] as { label: string; score: number };
+    const topResult = results[0];
     console.log("Top result:", topResult);
 
-    // Map the classification result to our disease categories
-    let diseaseKey: keyof typeof diseaseMapping = 'default';
-    
+    // Map visual features to diseases
+    let diseaseKey: keyof typeof diseaseMapping = 'healthy';
     const label = topResult.label.toLowerCase();
-    if (label.includes('blight') || label.includes('lesion')) {
-      diseaseKey = 'leaf_blight';
-    } else if (label.includes('mildew') || label.includes('white')) {
-      diseaseKey = 'powdery_mildew';
-    } else if (label.includes('spot') || label.includes('bacterial')) {
-      diseaseKey = 'bacterial_spot';
-    } else if (label.includes('rust') || label.includes('brown')) {
-      diseaseKey = 'rust';
+
+    if (label.includes('rust') || label.includes('brown') || label.includes('spot')) {
+      diseaseKey = 'common_rust';
+    } else if (label.includes('blight') || label.includes('lesion')) {
+      diseaseKey = 'northern_blight';
+    } else if (label.includes('gray') || label.includes('grey') || label.includes('streak')) {
+      diseaseKey = 'gray_leaf_spot';
+    } else if (label.includes('rot') || label.includes('fungus')) {
+      diseaseKey = 'ear_rot';
     } else if (label.includes('healthy') || label.includes('normal')) {
       diseaseKey = 'healthy';
     }
 
     const mappedResult = diseaseMapping[diseaseKey];
+    const confidence = Math.round((topResult.score as number) * 100);
 
     return {
-      ...diseaseMapping.default,
+      ...diseaseMapping.healthy, // Default values
       ...mappedResult,
-      confidence: Math.round(topResult.score * 100),
+      confidence,
     } as AnalysisResult;
 
   } catch (error) {
