@@ -1,20 +1,25 @@
-import { pipeline } from "@huggingface/transformers";
+import { pipeline, ImageClassificationOutput } from "@huggingface/transformers";
 
 interface AnalysisResult {
-  disease: string;
+  diseaseName: string;
   confidence: number;
-  status: string;
-  affectedArea: string;
+  status: "critical" | "moderate" | "normal";
+  affectedArea: number;
   causes: string[];
   prevention: string[];
-  treatment: string[];
+  treatment: {
+    medicine: string;
+    dosage: string;
+    frequency: string;
+    instructions: string;
+  };
 }
 
 const diseaseMapping: Record<string, Partial<AnalysisResult>> = {
   "northern_leaf_blight": {
-    disease: "Northern Leaf Blight",
-    status: "Severe",
-    affectedArea: "Leaves",
+    diseaseName: "Northern Leaf Blight",
+    status: "critical",
+    affectedArea: 75,
     causes: [
       "Fungal pathogen Exserohilum turcicum",
       "Humid conditions",
@@ -26,16 +31,17 @@ const diseaseMapping: Record<string, Partial<AnalysisResult>> = {
       "Remove infected plant debris",
       "Maintain proper plant spacing",
     ],
-    treatment: [
-      "Apply fungicides at early stages",
-      "Remove heavily infected leaves",
-      "Improve field drainage",
-    ],
+    treatment: {
+      medicine: "Propiconazole",
+      dosage: "500ml/hectare",
+      frequency: "Every 14 days",
+      instructions: "Apply during early morning or late evening",
+    },
   },
   "common_rust": {
-    disease: "Common Rust",
-    status: "Moderate",
-    affectedArea: "Leaves and Stems",
+    diseaseName: "Common Rust",
+    status: "moderate",
+    affectedArea: 45,
     causes: [
       "Fungal pathogen Puccinia sorghi",
       "Cool temperatures (16-23°C)",
@@ -47,23 +53,29 @@ const diseaseMapping: Record<string, Partial<AnalysisResult>> = {
       "Monitor fields regularly",
       "Proper spacing for air circulation",
     ],
-    treatment: [
-      "Apply fungicides when symptoms appear",
-      "Remove infected plants",
-      "Maintain field hygiene",
-    ],
+    treatment: {
+      medicine: "Azoxystrobin",
+      dosage: "300ml/hectare",
+      frequency: "Every 10-14 days",
+      instructions: "Apply before disease pressure becomes severe",
+    },
   },
   "healthy": {
-    disease: "Healthy Plant",
-    status: "Good",
-    affectedArea: "None",
+    diseaseName: "Healthy Plant",
+    status: "normal",
+    affectedArea: 0,
     causes: [],
     prevention: [
       "Continue regular monitoring",
       "Maintain good agricultural practices",
       "Follow recommended fertilization schedule",
     ],
-    treatment: [],
+    treatment: {
+      medicine: "None required",
+      dosage: "N/A",
+      frequency: "N/A",
+      instructions: "Continue regular maintenance",
+    },
   },
 };
 
@@ -71,35 +83,33 @@ export const analyzeCropImage = async (imageData: string): Promise<AnalysisResul
   try {
     console.log("Starting image analysis...");
     
-    // Initialize the image classification pipeline
     const classifier = await pipeline("image-classification", "Xenova/maize-disease-detection");
     
-    // Remove the data URL prefix to get just the base64 data
-    const base64Data = imageData.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
-    
-    // Convert base64 to Uint8Array
-    const binaryData = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
-    
     console.log("Running classification...");
-    const results = await classifier(binaryData);
+    const results = await classifier(imageData);
     console.log("Classification results:", results);
 
-    if (!results || results.length === 0) {
+    if (!Array.isArray(results) || results.length === 0) {
       throw new Error("No results from classification");
     }
 
-    const topResult = results[0];
+    const topResult = results[0] as { label: string; score: number };
     const mappedResult = diseaseMapping[topResult.label] || diseaseMapping.healthy;
 
     return {
       ...mappedResult,
-      confidence: topResult.score * 100,
-      disease: mappedResult.disease || "Unknown",
-      status: mappedResult.status || "Unknown",
-      affectedArea: mappedResult.affectedArea || "Unknown",
+      diseaseName: mappedResult.diseaseName || "Unknown Disease",
+      confidence: Math.round(topResult.score * 100),
+      status: mappedResult.status || "normal",
+      affectedArea: mappedResult.affectedArea || 0,
       causes: mappedResult.causes || [],
       prevention: mappedResult.prevention || [],
-      treatment: mappedResult.treatment || [],
+      treatment: mappedResult.treatment || {
+        medicine: "Unknown",
+        dosage: "Unknown",
+        frequency: "Unknown",
+        instructions: "Please consult an agricultural expert",
+      },
     } as AnalysisResult;
   } catch (error) {
     console.error("Error during image analysis:", error);
