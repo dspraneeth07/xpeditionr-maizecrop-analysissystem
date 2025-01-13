@@ -149,7 +149,7 @@ const Analyze = () => {
     if (!resultsRef.current || !results) return;
     
     try {
-      await generatePDF(resultsRef.current, results);
+      await generatePDF(resultsRef.current);
       toast({
         title: "Success",
         description: "PDF report has been generated and downloaded.",
@@ -187,6 +187,7 @@ const Analyze = () => {
         <Results 
           isLoading={analyzing} 
           data={results} 
+          formData={formData}
           onDownloadPDF={handleDownloadPDF}
           isDetailedView={selectedOption === 2 || selectedOption === 3}
         />
