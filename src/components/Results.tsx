@@ -111,24 +111,24 @@ View full report at: ${window.location.href}
     `.trim();
     
     try {
-      await navigator.share({
-        title: 'XpeditionR Crop Analysis Report',
-        text: shareText,
-        url: window.location.href
-      });
-    } catch (err) {
-      // Fallback for browsers that don't support native sharing
-      navigator.clipboard.writeText(shareText).then(() => {
+      if (navigator.share) {
+        await navigator.share({
+          title: 'XpeditionR Crop Analysis Report',
+          text: shareText,
+          url: window.location.href
+        });
+      } else {
+        await navigator.clipboard.writeText(shareText);
         toast({
           title: "Report copied to clipboard",
           description: "You can now paste and share the report details.",
         });
-      }).catch(() => {
-        toast({
-          variant: "destructive",
-          title: "Sharing failed",
-          description: "Could not share the report. Try copying the URL manually.",
-        });
+      }
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        title: "Sharing failed",
+        description: "Could not share the report. Try copying the URL manually.",
       });
     }
   };
@@ -156,7 +156,7 @@ View full report at: ${window.location.href}
 
         <CardContent className="space-y-8 pt-6">
           {formData && (
-            <div className="grid md:grid-cols-2 gap-6 p-6 bg-gradient-to-br from-gray-50 to-white rounded-lg shadow-inner animate-fade-in">
+            <div className="grid md:grid-cols-2 gap-6 p-6 bg-gradient-to-br from-gray-50 to-white rounded-lg shadow-inner">
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <User className="h-5 w-5 text-green-600" />
@@ -184,7 +184,7 @@ View full report at: ${window.location.href}
 
           <div className="grid gap-6 md:grid-cols-2">
             <div className="space-y-4">
-              <div className="animate-fade-in">
+              <div>
                 <h3 className="font-semibold mb-2 flex items-center gap-2">
                   <span className={`inline-block w-2 h-2 rounded-full ${getStatusColor(data.status)}`}></span>
                   Status
@@ -193,7 +193,7 @@ View full report at: ${window.location.href}
                   {data.status}
                 </p>
               </div>
-              <div className="animate-fade-in">
+              <div>
                 <h3 className="font-semibold mb-2">Affected Area</h3>
                 <div className="relative pt-1">
                   <Progress 
@@ -208,19 +208,36 @@ View full report at: ${window.location.href}
             </div>
 
             {isDetailedView && (
-              <div className="space-y-4 animate-fade-in">
+              <div className="space-y-6">
                 <div>
-                  <h3 className="font-semibold mb-2 flex items-center gap-2">
-                    <div className="p-2 bg-red-100 rounded-full shadow-lg transform hover:scale-110 transition-transform">
-                      <Bug className="h-5 w-5 text-red-600" />
+                  <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div className="p-2 bg-red-100 rounded-full shadow-lg">
+                      <Bug className="h-6 w-6 text-red-600" />
                     </div>
                     Causes
                   </h3>
-                  <ul className="list-none pl-5 space-y-2">
+                  <ul className="space-y-3">
                     {data.causes.map((cause, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                        <span className="inline-block w-2 h-2 mt-2 rounded-full bg-gradient-to-r from-red-400 to-red-500 shadow-md"></span>
+                      <li key={index} className="flex items-start gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                        <span className="mt-2 w-2 h-2 rounded-full bg-gradient-to-r from-red-400 to-red-500 shadow-md"></span>
                         <span className="text-gray-700">{cause}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div className="p-2 bg-green-100 rounded-full shadow-lg">
+                      <Shield className="h-6 w-6 text-green-600" />
+                    </div>
+                    Prevention Steps
+                  </h3>
+                  <ul className="space-y-3">
+                    {data.prevention.map((step, index) => (
+                      <li key={index} className="flex items-start gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                        <span className="mt-2 w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-green-500 shadow-md"></span>
+                        <span className="text-gray-700">{step}</span>
                       </li>
                     ))}
                   </ul>
@@ -230,97 +247,55 @@ View full report at: ${window.location.href}
           </div>
 
           {isDetailedView && (
-            <>
-              <div className="grid md:grid-cols-2 gap-8 pt-4">
-                <div className="space-y-6 animate-fade-in">
-                  <div>
-                    <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                      <div className="p-2 bg-red-100 rounded-full shadow-lg">
-                        <Bug className="h-6 w-6 text-red-600" />
-                      </div>
-                      Causes
-                    </h3>
-                    <ul className="space-y-3">
-                      {data.causes.map((cause, index) => (
-                        <li key={index} className="flex items-start gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
-                          <span className="mt-2 w-2 h-2 rounded-full bg-gradient-to-r from-red-400 to-red-500 shadow-md"></span>
-                          <span className="text-gray-700">{cause}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+            <div className="animate-fade-in">
+              <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <div className="p-2 bg-blue-100 rounded-full shadow-lg">
+                  <Syringe className="h-5 w-5 text-blue-600" />
                 </div>
-
-                <div className="space-y-6 animate-fade-in">
-                  <div>
-                    <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                      <div className="p-2 bg-green-100 rounded-full shadow-lg">
-                        <Shield className="h-6 w-6 text-green-600" />
-                      </div>
-                      Prevention Steps
-                    </h3>
-                    <ul className="space-y-3">
-                      {data.prevention.map((step, index) => (
-                        <li key={index} className="flex items-start gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
-                          <span className="mt-2 w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-green-500 shadow-md"></span>
-                          <span className="text-gray-700">{step}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="animate-fade-in">
-                <h3 className="font-semibold mb-2 flex items-center gap-2">
-                  <div className="p-2 bg-blue-100 rounded-full shadow-lg transform hover:scale-110 transition-transform">
-                    <Syringe className="h-5 w-5 text-blue-600" />
-                  </div>
-                  Treatment Recommendations
-                </h3>
-                <Card className="bg-gradient-to-br from-white to-blue-50">
-                  <CardContent className="pt-6">
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div className="space-y-2">
-                        <p className="font-medium flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 shadow-md"></span>
-                          Medicine
-                        </p>
-                        <p className="text-gray-700 pl-4">{data.treatment.medicine}</p>
-                      </div>
-                      <div className="space-y-2">
-                        <p className="font-medium flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 shadow-md"></span>
-                          Dosage
-                        </p>
-                        <p className="text-gray-700 pl-4">{data.treatment.dosage}</p>
-                      </div>
-                      <div className="space-y-2">
-                        <p className="font-medium flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 shadow-md"></span>
-                          Frequency
-                        </p>
-                        <p className="text-gray-700 pl-4">{data.treatment.frequency}</p>
-                      </div>
-                      <div className="space-y-2">
-                        <p className="font-medium flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 shadow-md"></span>
-                          Instructions
-                        </p>
-                        <p className="text-gray-700 pl-4">{data.treatment.instructions}</p>
-                      </div>
+                Treatment Recommendations
+              </h3>
+              <Card className="bg-gradient-to-br from-white to-blue-50">
+                <CardContent className="pt-6">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <p className="font-medium flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 shadow-md"></span>
+                        Medicine
+                      </p>
+                      <p className="text-gray-700 pl-4">{data.treatment.medicine}</p>
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </>
+                    <div className="space-y-2">
+                      <p className="font-medium flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 shadow-md"></span>
+                        Dosage
+                      </p>
+                      <p className="text-gray-700 pl-4">{data.treatment.dosage}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <p className="font-medium flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 shadow-md"></span>
+                        Frequency
+                      </p>
+                      <p className="text-gray-700 pl-4">{data.treatment.frequency}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <p className="font-medium flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 shadow-md"></span>
+                        Instructions
+                      </p>
+                      <p className="text-gray-700 pl-4">{data.treatment.instructions}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           )}
         </CardContent>
       </Card>
 
       <div className="flex flex-col sm:flex-row gap-4 print:hidden">
         <Button 
-          className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all duration-300 hover:scale-[1.02] animate-fade-in py-6" 
+          className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all duration-300 hover:scale-[1.02]" 
           onClick={handleCheckOther}
         >
           <Search className="mr-2 h-5 w-5" />
@@ -329,7 +304,7 @@ View full report at: ${window.location.href}
         
         {isDetailedView && (
           <Button 
-            className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transition-all duration-300 hover:scale-[1.02] animate-fade-in py-6" 
+            className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transition-all duration-300 hover:scale-[1.02]" 
             onClick={onDownloadPDF}
           >
             <Download className="mr-2 h-5 w-5" />
@@ -338,7 +313,7 @@ View full report at: ${window.location.href}
         )}
         
         <Button 
-          className="flex-1 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 transition-all duration-300 hover:scale-[1.02] animate-fade-in py-6" 
+          className="flex-1 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 transition-all duration-300 hover:scale-[1.02]" 
           onClick={handleShare}
         >
           <Share2 className="mr-2 h-5 w-5" />

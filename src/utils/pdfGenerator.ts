@@ -21,7 +21,7 @@ export const generatePDF = async (element: HTMLElement, results: any) => {
       format: "a4",
     });
 
-    // Add header with logo and title
+    // Add header with title
     pdf.setFontSize(24);
     pdf.setTextColor(40, 167, 69); // Green color
     pdf.text("XpeditionR Crop Analysis Report", 20, 20);
@@ -32,7 +32,7 @@ export const generatePDF = async (element: HTMLElement, results: any) => {
     pdf.text(`Generated on: ${new Date().toLocaleString()}`, 20, 30);
     pdf.text(`Report ID: ${results.searchId}`, 20, 40);
 
-    // Add user details section
+    // Add user details section with proper spacing
     pdf.setTextColor(60, 60, 60);
     pdf.text("User Information:", 20, 55);
     if (results.formData) {
@@ -50,20 +50,26 @@ export const generatePDF = async (element: HTMLElement, results: any) => {
     pdf.text(`Status: ${results.status.toUpperCase()}`, 25, 130);
     pdf.text(`Affected Area: ${results.affectedArea}%`, 25, 140);
 
-    // Capture the results component as an image for detailed view
-    const canvas = await html2canvas(element, {
-      scale: 2,
-      logging: false,
-      useCORS: true,
+    // Add causes section
+    pdf.text("Causes:", 20, 155);
+    results.causes.forEach((cause: string, index: number) => {
+      pdf.text(`• ${cause}`, 25, 165 + (index * 10));
     });
 
-    // Add the captured image
-    const imgData = canvas.toDataURL("image/png");
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const imgWidth = pdfWidth - 40;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    
-    pdf.addImage(imgData, "PNG", 20, 150, imgWidth, imgHeight);
+    // Add prevention section
+    const preventionStartY = 165 + (results.causes.length * 10) + 10;
+    pdf.text("Prevention Steps:", 20, preventionStartY);
+    results.prevention.forEach((step: string, index: number) => {
+      pdf.text(`• ${step}`, 25, preventionStartY + 10 + (index * 10));
+    });
+
+    // Add treatment section
+    const treatmentStartY = preventionStartY + (results.prevention.length * 10) + 20;
+    pdf.text("Treatment:", 20, treatmentStartY);
+    pdf.text(`Medicine: ${results.treatment.medicine}`, 25, treatmentStartY + 10);
+    pdf.text(`Dosage: ${results.treatment.dosage}`, 25, treatmentStartY + 20);
+    pdf.text(`Frequency: ${results.treatment.frequency}`, 25, treatmentStartY + 30);
+    pdf.text(`Instructions: ${results.treatment.instructions}`, 25, treatmentStartY + 40);
 
     // Add footer
     const pageHeight = pdf.internal.pageSize.getHeight();
