@@ -1,4 +1,4 @@
-import { pipeline, ImageClassificationOutput } from "@huggingface/transformers";
+import { pipeline } from "@huggingface/transformers";
 
 interface AnalysisResult {
   diseaseName: string;
@@ -22,20 +22,24 @@ const diseaseMapping: Record<string, Partial<AnalysisResult>> = {
     affectedArea: 75,
     causes: [
       "Fungal pathogen Exserohilum turcicum",
-      "Humid conditions",
+      "Humid conditions (>90% humidity)",
       "Temperature between 18-27°C",
+      "Poor air circulation",
+      "Previous crop debris"
     ],
     prevention: [
       "Use resistant maize varieties",
-      "Crop rotation",
-      "Remove infected plant debris",
+      "Implement crop rotation with non-host crops",
+      "Remove and destroy infected plant debris",
       "Maintain proper plant spacing",
+      "Apply balanced fertilization",
+      "Use fungicide seed treatments"
     ],
     treatment: {
       medicine: "Propiconazole",
       dosage: "500ml/hectare",
       frequency: "Every 14 days",
-      instructions: "Apply during early morning or late evening",
+      instructions: "Apply during early morning or late evening. Ensure complete coverage of leaves."
     },
   },
   "common_rust": {
@@ -46,18 +50,46 @@ const diseaseMapping: Record<string, Partial<AnalysisResult>> = {
       "Fungal pathogen Puccinia sorghi",
       "Cool temperatures (16-23°C)",
       "High humidity",
+      "Extended leaf wetness",
+      "Wind-dispersed spores"
     ],
     prevention: [
       "Plant resistant varieties",
-      "Early planting",
+      "Early planting to avoid peak disease periods",
       "Monitor fields regularly",
       "Proper spacing for air circulation",
+      "Avoid overhead irrigation"
     ],
     treatment: {
       medicine: "Azoxystrobin",
       dosage: "300ml/hectare",
       frequency: "Every 10-14 days",
-      instructions: "Apply before disease pressure becomes severe",
+      instructions: "Apply before disease pressure becomes severe. Rotate fungicides to prevent resistance."
+    },
+  },
+  "gray_leaf_spot": {
+    diseaseName: "Gray Leaf Spot",
+    status: "critical",
+    affectedArea: 65,
+    causes: [
+      "Fungal pathogen Cercospora zeae-maydis",
+      "High humidity and temperature",
+      "Continuous corn cultivation",
+      "No-till farming practices",
+      "Poor field drainage"
+    ],
+    prevention: [
+      "Use resistant hybrids",
+      "Rotate crops for 2 years",
+      "Improve field drainage",
+      "Control weeds",
+      "Deep plowing of crop residue"
+    ],
+    treatment: {
+      medicine: "Pyraclostrobin + Metconazole",
+      dosage: "750ml/hectare",
+      frequency: "Every 21 days",
+      instructions: "Begin applications at disease onset. Ensure thorough coverage of all plant surfaces."
     },
   },
   "healthy": {
@@ -69,12 +101,14 @@ const diseaseMapping: Record<string, Partial<AnalysisResult>> = {
       "Continue regular monitoring",
       "Maintain good agricultural practices",
       "Follow recommended fertilization schedule",
+      "Practice proper irrigation management",
+      "Implement integrated pest management"
     ],
     treatment: {
       medicine: "None required",
       dosage: "N/A",
       frequency: "N/A",
-      instructions: "Continue regular maintenance",
+      instructions: "Continue regular maintenance and monitoring"
     },
   },
 };
@@ -93,8 +127,8 @@ export const analyzeCropImage = async (imageData: string): Promise<AnalysisResul
       throw new Error("No results from classification");
     }
 
-    const topResult = results[0] as { label: string; score: number };
-    const mappedResult = diseaseMapping[topResult.label] || diseaseMapping.healthy;
+    const topResult = results[0];
+    const mappedResult = diseaseMapping[topResult.label as keyof typeof diseaseMapping] || diseaseMapping.healthy;
 
     return {
       ...mappedResult,
