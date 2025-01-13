@@ -1,5 +1,17 @@
 export type DiseaseStatus = "critical" | "moderate" | "normal";
-export type DiseaseKey = keyof typeof allDiseases;
+
+export type DiseaseKey = 
+  | "common_rust"
+  | "southern_rust"
+  | "northern_leaf_blight"
+  | "gray_leaf_spot"
+  | "goss_wilt"
+  | "bacterial_leaf_streak"
+  | "maize_dwarf"
+  | "nitrogen_deficiency"
+  | "phosphorus_deficiency"
+  | "potassium_deficiency"
+  | "healthy";
 
 export interface DiseaseInfo {
   diseaseName: string;

@@ -70,8 +70,10 @@ export const analyzeCropImage = async (imageData: string): Promise<AnalysisResul
     const diseaseKey = detectDisease(topResult.label);
     const confidence = Math.round(topResult.score * 100);
 
+    const diseaseInfo = allDiseases[diseaseKey];
+
     return {
-      ...allDiseases[diseaseKey],
+      ...diseaseInfo,
       confidence,
     };
 
