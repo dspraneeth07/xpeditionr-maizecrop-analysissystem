@@ -1,4 +1,4 @@
-import { CheckCircle, AlertCircle, Download, Leaf } from "lucide-react";
+import { CheckCircle, AlertCircle, Download, Bug, Shield, Syringe, Leaf } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   Card,
@@ -75,6 +75,12 @@ export const Results = ({ isLoading, data, onDownloadPDF, isDetailedView }: Resu
     }
   };
 
+  const getAffectedAreaGradient = (percentage: number) => {
+    if (percentage > 66) return "bg-gradient-to-r from-red-500 to-red-600";
+    if (percentage > 33) return "bg-gradient-to-r from-yellow-400 to-yellow-500";
+    return "bg-gradient-to-r from-green-400 to-green-500";
+  };
+
   const StatusIcon = data.status === "critical" ? AlertCircle : CheckCircle;
 
   return (
@@ -108,7 +114,10 @@ export const Results = ({ isLoading, data, onDownloadPDF, isDetailedView }: Resu
               <div className="animate-fade-in">
                 <h3 className="font-semibold mb-2">Affected Area</h3>
                 <div className="relative pt-1">
-                  <Progress value={data.affectedArea} className="h-2" />
+                  <Progress 
+                    value={data.affectedArea} 
+                    className={`h-2 ${getAffectedAreaGradient(data.affectedArea)}`} 
+                  />
                   <span className="text-sm text-gray-600 mt-1 inline-block">
                     {data.affectedArea}% of crop affected
                   </span>
@@ -119,10 +128,18 @@ export const Results = ({ isLoading, data, onDownloadPDF, isDetailedView }: Resu
             {isDetailedView && (
               <div className="space-y-4 animate-fade-in">
                 <div>
-                  <h3 className="font-semibold mb-2">Causes</h3>
-                  <ul className="list-disc pl-5 space-y-1">
+                  <h3 className="font-semibold mb-2 flex items-center gap-2">
+                    <div className="p-2 bg-red-100 rounded-full shadow-lg transform hover:scale-110 transition-transform">
+                      <Bug className="h-5 w-5 text-red-600" />
+                    </div>
+                    Causes
+                  </h3>
+                  <ul className="list-none pl-5 space-y-2">
                     {data.causes.map((cause, index) => (
-                      <li key={index} className="text-gray-700">{cause}</li>
+                      <li key={index} className="flex items-start gap-2">
+                        <span className="inline-block w-2 h-2 mt-2 rounded-full bg-red-400"></span>
+                        <span className="text-gray-700">{cause}</span>
+                      </li>
                     ))}
                   </ul>
                 </div>
@@ -134,35 +151,60 @@ export const Results = ({ isLoading, data, onDownloadPDF, isDetailedView }: Resu
             <>
               <div className="space-y-4 animate-fade-in">
                 <div>
-                  <h3 className="font-semibold mb-2">Prevention Steps</h3>
-                  <ul className="list-disc pl-5 space-y-1">
+                  <h3 className="font-semibold mb-2 flex items-center gap-2">
+                    <div className="p-2 bg-green-100 rounded-full shadow-lg transform hover:scale-110 transition-transform">
+                      <Shield className="h-5 w-5 text-green-600" />
+                    </div>
+                    Prevention Steps
+                  </h3>
+                  <ul className="list-none pl-5 space-y-2">
                     {data.prevention.map((step, index) => (
-                      <li key={index} className="text-gray-700">{step}</li>
+                      <li key={index} className="flex items-start gap-2">
+                        <span className="inline-block w-2 h-2 mt-2 rounded-full bg-green-400"></span>
+                        <span className="text-gray-700">{step}</span>
+                      </li>
                     ))}
                   </ul>
                 </div>
               </div>
 
               <div className="animate-fade-in">
-                <h3 className="font-semibold mb-2">Treatment Recommendations</h3>
-                <Card className="bg-gray-50">
+                <h3 className="font-semibold mb-2 flex items-center gap-2">
+                  <div className="p-2 bg-blue-100 rounded-full shadow-lg transform hover:scale-110 transition-transform">
+                    <Syringe className="h-5 w-5 text-blue-600" />
+                  </div>
+                  Treatment Recommendations
+                </h3>
+                <Card className="bg-gradient-to-br from-white to-blue-50">
                   <CardContent className="pt-6">
                     <div className="grid gap-4 md:grid-cols-2">
-                      <div>
-                        <p className="font-medium">Medicine</p>
-                        <p className="text-gray-700">{data.treatment.medicine}</p>
+                      <div className="space-y-2">
+                        <p className="font-medium flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                          Medicine
+                        </p>
+                        <p className="text-gray-700 pl-4">{data.treatment.medicine}</p>
                       </div>
-                      <div>
-                        <p className="font-medium">Dosage</p>
-                        <p className="text-gray-700">{data.treatment.dosage}</p>
+                      <div className="space-y-2">
+                        <p className="font-medium flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                          Dosage
+                        </p>
+                        <p className="text-gray-700 pl-4">{data.treatment.dosage}</p>
                       </div>
-                      <div>
-                        <p className="font-medium">Frequency</p>
-                        <p className="text-gray-700">{data.treatment.frequency}</p>
+                      <div className="space-y-2">
+                        <p className="font-medium flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                          Frequency
+                        </p>
+                        <p className="text-gray-700 pl-4">{data.treatment.frequency}</p>
                       </div>
-                      <div>
-                        <p className="font-medium">Instructions</p>
-                        <p className="text-gray-700">{data.treatment.instructions}</p>
+                      <div className="space-y-2">
+                        <p className="font-medium flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                          Instructions
+                        </p>
+                        <p className="text-gray-700 pl-4">{data.treatment.instructions}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -175,7 +217,7 @@ export const Results = ({ isLoading, data, onDownloadPDF, isDetailedView }: Resu
 
       {isDetailedView && (
         <Button 
-          className="w-full bg-green-600 hover:bg-green-700 transition-all duration-300 hover:scale-[1.02] animate-fade-in" 
+          className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transition-all duration-300 hover:scale-[1.02] animate-fade-in" 
           onClick={onDownloadPDF}
         >
           <Download className="mr-2" />
