@@ -1,5 +1,5 @@
 import { pipeline, PretrainedOptions } from "@huggingface/transformers";
-import { allDiseases, DiseaseInfo, DiseaseKey } from "./diseaseDefinitions";
+import { allDiseases, DiseaseKey } from "./diseaseDefinitions";
 
 interface AnalysisResult extends DiseaseInfo {
   confidence: number;
@@ -50,17 +50,28 @@ const mapModelOutputToDisease = (label: string): DiseaseKey => {
   const normalizedLabel = label.toLowerCase();
   
   // Map model output to our disease definitions
-  if (normalizedLabel.includes('blight') || normalizedLabel.includes('disease')) {
-    return 'northern_leaf_blight';
+  if (normalizedLabel.includes('blight')) {
+    return 'northern_corn_leaf_blight';
+  }
+  
+  if (normalizedLabel.includes('rust')) {
+    return 'common_rust';
+  }
+
+  if (normalizedLabel.includes('spot')) {
+    return 'gray_leaf_spot';
+  }
+
+  if (normalizedLabel.includes('streak')) {
+    return 'bacterial_leaf_streak';
   }
   
   if (normalizedLabel.includes('healthy') || normalizedLabel.includes('normal')) {
     return 'healthy';
   }
   
-  // Default to common rust if no clear match
-  // This is a temporary fallback - in production you'd want more sophisticated mapping
-  return 'common_rust';
+  // If no clear match is found, return unknown
+  return 'unknown';
 };
 
 export const analyzeCropImage = async (imageData: string): Promise<AnalysisResult> => {

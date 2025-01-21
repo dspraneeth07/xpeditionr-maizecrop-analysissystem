@@ -1,4 +1,4 @@
-export type DiseaseStatus = "critical" | "moderate" | "normal";
+export type DiseaseStatus = "critical" | "moderate" | "normal" | "unknown";
 
 export type DiseaseKey = 
   | "northern_corn_leaf_blight"
@@ -6,7 +6,8 @@ export type DiseaseKey =
   | "common_rust"
   | "gray_leaf_spot"
   | "bacterial_leaf_streak"
-  | "healthy";
+  | "healthy"
+  | "unknown";
 
 export interface DiseaseInfo {
   diseaseName: string;
@@ -139,6 +140,29 @@ export const allDiseases = {
       dosage: "Not applicable",
       frequency: "Continue monitoring",
       instructions: "Maintain current agricultural practices"
+    }
+  },
+  unknown: {
+    diseaseName: "Unidentified Crop Condition",
+    status: "unknown",
+    affectedArea: 0,
+    causes: [
+      "The condition could not be accurately identified",
+      "Multiple symptoms may be present",
+      "Novel or complex disease patterns",
+      "Environmental stress factors"
+    ],
+    prevention: [
+      "Regular crop monitoring",
+      "Document symptoms and progression",
+      "Take clear photos of affected areas",
+      "Monitor weather conditions"
+    ],
+    treatment: {
+      medicine: "Consult Agricultural Officer",
+      dosage: "Please do not apply any treatments without professional guidance",
+      frequency: "Seek immediate consultation",
+      instructions: "Contact your local agricultural extension officer or plant pathologist for proper diagnosis and treatment recommendations. Keep detailed records of symptoms and their progression to assist in diagnosis."
     }
   }
 };
