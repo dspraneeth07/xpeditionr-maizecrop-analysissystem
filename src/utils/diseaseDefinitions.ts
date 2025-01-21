@@ -1,16 +1,11 @@
 export type DiseaseStatus = "critical" | "moderate" | "normal";
 
 export type DiseaseKey = 
+  | "northern_corn_leaf_blight"
+  | "southern_corn_leaf_blight"
   | "common_rust"
-  | "southern_rust"
-  | "northern_leaf_blight"
   | "gray_leaf_spot"
-  | "goss_wilt"
   | "bacterial_leaf_streak"
-  | "maize_dwarf"
-  | "nitrogen_deficiency"
-  | "phosphorus_deficiency"
-  | "potassium_deficiency"
   | "healthy";
 
 export interface DiseaseInfo {
@@ -28,225 +23,99 @@ export interface DiseaseInfo {
 }
 
 export const fungalDiseases: Record<string, DiseaseInfo> = {
-  common_rust: {
-    diseaseName: "Common Rust (Puccinia sorghi)",
-    status: "critical",
-    affectedArea: 75,
-    causes: [
-      "Fungal pathogen (Puccinia sorghi)",
-      "Cool temperatures (60-70°F)",
-      "High humidity (>95%)",
-      "Extended leaf wetness periods"
-    ],
-    prevention: [
-      "Plant rust-resistant hybrids",
-      "Early planting",
-      "Improve field drainage",
-      "Maintain proper plant spacing"
-    ],
-    treatment: {
-      medicine: "Azoxystrobin + Propiconazole",
-      dosage: "400-600 ml/ha",
-      frequency: "14-21 days interval",
-      instructions: "Apply before disease reaches 5% leaf area"
-    }
-  },
-  southern_rust: {
-    diseaseName: "Southern Rust (Puccinia polysora)",
-    status: "critical",
-    affectedArea: 70,
-    causes: [
-      "Fungal pathogen (Puccinia polysora)",
-      "Warm temperatures (80-90°F)",
-      "High humidity"
-    ],
-    prevention: [
-      "Resistant varieties",
-      "Early planting",
-      "Field monitoring"
-    ],
-    treatment: {
-      medicine: "Pyraclostrobin + Metconazole",
-      dosage: "500-750 ml/ha",
-      frequency: "14 days interval",
-      instructions: "Apply at first sign of disease"
-    }
-  },
-  northern_leaf_blight: {
-    diseaseName: "Northern Corn Leaf Blight",
+  northern_corn_leaf_blight: {
+    diseaseName: "Northern Corn Leaf Blight (Exserohilum turcicum)",
     status: "critical",
     affectedArea: 65,
     causes: [
-      "Fungal pathogen (Exserohilum turcicum)",
-      "Cool, moist conditions",
-      "Poor air circulation"
+      "Fungal pathogen Exserohilum turcicum",
+      "Cool temperatures (65-80°F)",
+      "Prolonged leaf wetness (>6 hours)",
+      "High humidity (>90%)"
     ],
     prevention: [
-      "Resistant hybrids",
-      "Crop rotation",
-      "Residue management"
+      "Plant resistant hybrids (Ht1, Ht2, or Ht3 genes)",
+      "Implement crop rotation with non-host crops",
+      "Remove or plow under crop debris",
+      "Maintain proper plant spacing for ventilation"
     ],
     treatment: {
-      medicine: "Triazole fungicides",
-      dosage: "300-400 ml/ha",
-      frequency: "10-14 days interval",
-      instructions: "Apply when disease first appears"
+      medicine: "Propiconazole or Azoxystrobin fungicide",
+      dosage: "Apply 4-6 fl oz/acre of propiconazole or 6-15.5 fl oz/acre of azoxystrobin",
+      frequency: "14-21 day intervals as needed",
+      instructions: "Apply when disease first appears. Do not apply within 30 days of harvest."
+    }
+  },
+  common_rust: {
+    diseaseName: "Common Rust (Puccinia sorghi)",
+    status: "critical",
+    affectedArea: 70,
+    causes: [
+      "Fungal pathogen Puccinia sorghi",
+      "Moderate temperatures (60-77°F)",
+      "High relative humidity (>95%)",
+      "Presence of free moisture on leaves"
+    ],
+    prevention: [
+      "Plant rust-resistant hybrids",
+      "Early planting to avoid optimal disease conditions",
+      "Scout fields regularly",
+      "Maintain proper air circulation"
+    ],
+    treatment: {
+      medicine: "Pyraclostrobin + Metconazole mixture",
+      dosage: "10-12 fl oz/acre",
+      frequency: "Apply at 7-14 day intervals",
+      instructions: "Begin applications at first sign of disease. Ensure complete coverage. Do not exceed 2 sequential applications."
     }
   },
   gray_leaf_spot: {
-    diseaseName: "Gray Leaf Spot",
+    diseaseName: "Gray Leaf Spot (Cercospora zeae-maydis)",
     status: "critical",
     affectedArea: 60,
     causes: [
-      "Fungal pathogen (Cercospora zeae-maydis)",
-      "High humidity",
-      "Warm temperatures"
+      "Fungal pathogen Cercospora zeae-maydis",
+      "High humidity (>95%)",
+      "Temperatures between 70-85°F",
+      "Extended periods of leaf wetness"
     ],
     prevention: [
-      "Resistant varieties",
-      "Crop rotation",
-      "Improved air circulation"
+      "Use resistant hybrids",
+      "Rotate with non-host crops for 2 years",
+      "Improve field drainage",
+      "Practice conservation tillage"
     ],
     treatment: {
-      medicine: "Strobilurin fungicides",
-      dosage: "350-500 ml/ha",
-      frequency: "14-21 days interval",
-      instructions: "Apply preventively in high-risk areas"
+      medicine: "Trifloxystrobin + Prothioconazole",
+      dosage: "4-5 fl oz/acre",
+      frequency: "14-21 day intervals",
+      instructions: "Apply when disease first appears. Maximum 2 applications per season. Observe pre-harvest interval of 14 days."
     }
   }
 };
 
 export const bacterialDiseases: Record<string, DiseaseInfo> = {
-  goss_wilt: {
-    diseaseName: "Goss's Wilt",
-    status: "critical",
-    affectedArea: 65,
-    causes: [
-      "Bacteria (Clavibacter michiganensis)",
-      "Plant injury",
-      "Warm, humid conditions"
-    ],
-    prevention: [
-      "Resistant hybrids",
-      "Crop rotation",
-      "Clean equipment"
-    ],
-    treatment: {
-      medicine: "Copper-based bactericide",
-      dosage: "2.5-3.0 kg/ha",
-      frequency: "7-10 days interval",
-      instructions: "Apply preventively during high-risk periods"
-    }
-  },
   bacterial_leaf_streak: {
-    diseaseName: "Bacterial Leaf Streak",
-    status: "critical",
-    affectedArea: 55,
-    causes: [
-      "Xanthomonas vasicola",
-      "High humidity",
-      "Leaf wetness"
-    ],
-    prevention: [
-      "Resistant varieties",
-      "Proper irrigation",
-      "Field sanitation"
-    ],
-    treatment: {
-      medicine: "Copper hydroxide",
-      dosage: "2.0-2.5 kg/ha",
-      frequency: "7-14 days interval",
-      instructions: "Apply early in disease development"
-    }
-  }
-};
-
-export const viralDiseases: Record<string, DiseaseInfo> = {
-  maize_dwarf: {
-    diseaseName: "Maize Dwarf Mosaic Virus",
-    status: "critical",
-    affectedArea: 60,
-    causes: [
-      "MDMV virus",
-      "Aphid vectors",
-      "Presence of grass hosts"
-    ],
-    prevention: [
-      "Resistant varieties",
-      "Weed control",
-      "Aphid management"
-    ],
-    treatment: {
-      medicine: "Insecticide for vector control",
-      dosage: "As per label",
-      frequency: "Monitor aphid population",
-      instructions: "Focus on vector control and prevention"
-    }
-  }
-};
-
-export const nutritionalDisorders: Record<string, DiseaseInfo> = {
-  nitrogen_deficiency: {
-    diseaseName: "Nitrogen Deficiency",
+    diseaseName: "Bacterial Leaf Streak (Xanthomonas vasicola)",
     status: "moderate",
     affectedArea: 45,
     causes: [
-      "Poor soil fertility",
-      "Leaching",
-      "Insufficient fertilization"
+      "Bacterial pathogen Xanthomonas vasicola pv. vasculorum",
+      "Warm temperatures (75-85°F)",
+      "High humidity",
+      "Overhead irrigation or rain splash"
     ],
     prevention: [
-      "Soil testing",
-      "Proper fertilization",
-      "Cover crops"
+      "Plant tolerant hybrids",
+      "Practice crop rotation",
+      "Avoid overhead irrigation",
+      "Maintain field sanitation"
     ],
     treatment: {
-      medicine: "Urea or Ammonium Nitrate",
-      dosage: "150-200 kg N/ha",
-      frequency: "Split application",
-      instructions: "Apply based on growth stage and soil tests"
-    }
-  },
-  phosphorus_deficiency: {
-    diseaseName: "Phosphorus Deficiency",
-    status: "moderate",
-    affectedArea: 40,
-    causes: [
-      "Low soil pH",
-      "Cool soil temperatures",
-      "Poor root development"
-    ],
-    prevention: [
-      "Soil pH management",
-      "Band application",
-      "Starter fertilizers"
-    ],
-    treatment: {
-      medicine: "Triple superphosphate",
-      dosage: "60-80 kg P2O5/ha",
-      frequency: "Pre-plant application",
-      instructions: "Apply in bands near seed placement"
-    }
-  },
-  potassium_deficiency: {
-    diseaseName: "Potassium Deficiency",
-    status: "moderate",
-    affectedArea: 35,
-    causes: [
-      "Sandy soils",
-      "High rainfall",
-      "Soil compaction"
-    ],
-    prevention: [
-      "Regular soil testing",
-      "Balanced fertilization",
-      "Proper tillage"
-    ],
-    treatment: {
-      medicine: "Potassium chloride",
-      dosage: "100-120 kg K2O/ha",
-      frequency: "Split application",
-      instructions: "Apply based on soil test results"
+      medicine: "Copper hydroxide bactericide",
+      dosage: "1.5-2.0 lbs/acre",
+      frequency: "7-10 day intervals",
+      instructions: "Apply before severe disease development. Use with sufficient water volume for complete coverage."
     }
   }
 };
@@ -254,23 +123,22 @@ export const nutritionalDisorders: Record<string, DiseaseInfo> = {
 export const allDiseases = {
   ...fungalDiseases,
   ...bacterialDiseases,
-  ...viralDiseases,
-  ...nutritionalDisorders,
   healthy: {
     diseaseName: "Healthy Corn Plant",
     status: "normal",
     affectedArea: 0,
     causes: [],
     prevention: [
-      "Regular monitoring",
-      "Balanced fertilization",
-      "Proper irrigation"
+      "Regular crop monitoring",
+      "Balanced fertilization program",
+      "Proper irrigation management",
+      "Integrated pest management practices"
     ],
     treatment: {
       medicine: "No treatment needed",
-      dosage: "N/A",
+      dosage: "Not applicable",
       frequency: "Continue monitoring",
-      instructions: "Maintain current practices"
+      instructions: "Maintain current agricultural practices"
     }
   }
 };
