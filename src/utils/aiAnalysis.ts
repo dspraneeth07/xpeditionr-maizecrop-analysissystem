@@ -1,5 +1,5 @@
 import { pipeline, PretrainedOptions } from "@huggingface/transformers";
-import { allDiseases, DiseaseKey } from "./diseaseDefinitions";
+import { allDiseases, DiseaseKey, DiseaseInfo } from "./diseaseDefinitions";
 
 interface AnalysisResult extends DiseaseInfo {
   confidence: number;
