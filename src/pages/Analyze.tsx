@@ -12,32 +12,8 @@ const generateUniqueId = () => {
   return `XR-${timestamp}-${randomStr}`.toUpperCase();
 };
 
-const mockResults = {
-  searchId: generateUniqueId(),
-  diseaseName: "Maize Rust",
-  confidence: 25.49,
-  status: "critical" as const,
-  affectedArea: 30,
-  causes: [
-    "Fungal infection (Puccinia spp.)",
-    "High humidity levels in the field",
-    "Overcrowded planting leading to poor air circulation"
-  ],
-  prevention: [
-    "Ensure proper ventilation between plants",
-    "Avoid waterlogging in the fields",
-    "Rotate crops regularly to reduce fungal build-up"
-  ],
-  treatment: {
-    medicine: "Azoxystrobin",
-    dosage: "2.5 ml per liter of water",
-    frequency: "Every 10 days until symptoms subside",
-    instructions: "Apply in the early morning or evening to avoid direct sunlight. Use a sprayer for even coverage on all affected leaves."
-  }
-};
-
 const Analyze = () => {
-  const [selectedOption, setSelectedOption] = useState<1 | 2 | 3 | null>(null);
+  const [selectedOption, setSelectedOption] = useState<2 | null>(null);
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>("");
   const [analyzing, setAnalyzing] = useState(false);
@@ -51,7 +27,7 @@ const Analyze = () => {
   });
   const { toast } = useToast();
 
-  const handleOptionSelect = (option: 1 | 2 | 3) => {
+  const handleOptionSelect = (option: 2) => {
     setSelectedOption(option);
     console.log(`Selected analysis option: ${option}`);
   };
@@ -63,15 +39,6 @@ const Analyze = () => {
       setPreview(reader.result as string);
     };
     reader.readAsDataURL(file);
-
-    // If quick test option is selected, show mock results immediately
-    if (selectedOption === 3) {
-      setResults(mockResults);
-      toast({
-        title: "Analysis Complete",
-        description: "Your mock test results are ready to view.",
-      });
-    }
   };
 
   const handleImageRemove = () => {
@@ -110,30 +77,16 @@ const Analyze = () => {
 
     setAnalyzing(true);
     try {
-      if (selectedOption === 3) {
-        const resultsWithId = {
-          ...mockResults,
-          searchId: generateUniqueId(),
-        };
-        setResults(resultsWithId);
-        toast({
-          title: "Analysis Complete",
-          description: "Your mock test results are ready to view.",
-        });
-      } else {
-        const analysisResults = await analyzeCropImage(preview);
-        const resultsWithId = {
-          ...analysisResults,
-          searchId: generateUniqueId(),
-        };
-        setResults(resultsWithId);
-        toast({
-          title: "Analysis Complete",
-          description: selectedOption === 2 
-            ? "Your detailed crop analysis report is ready to view."
-            : "Your crop analysis is ready to view.",
-        });
-      }
+      const analysisResults = await analyzeCropImage(preview);
+      const resultsWithId = {
+        ...analysisResults,
+        searchId: generateUniqueId(),
+      };
+      setResults(resultsWithId);
+      toast({
+        title: "Analysis Complete",
+        description: "Your detailed crop analysis report is ready to view.",
+      });
     } catch (error) {
       toast({
         variant: "destructive",
@@ -189,7 +142,7 @@ const Analyze = () => {
           data={results} 
           formData={formData}
           onDownloadPDF={handleDownloadPDF}
-          isDetailedView={selectedOption === 2 || selectedOption === 3}
+          isDetailedView={true}
         />
       </div>
     );
@@ -199,12 +152,8 @@ const Analyze = () => {
     <div className="container mx-auto px-4 py-8 animate-fade-in">
       <h1 className="text-3xl font-bold text-center mb-8 text-green-900 animate-fade-in">
         {!selectedOption 
-          ? "Choose Analysis Type" 
-          : selectedOption === 1 
-            ? "Quick Crop Analysis"
-            : selectedOption === 2
-              ? "Detailed Crop Analysis"
-              : "Quick Test Analysis"
+          ? "Crop Analysis"
+          : "AI-Powered Crop Analysis"
         }
       </h1>
 
