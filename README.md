@@ -4,6 +4,37 @@
 
 **URL**: https://lovable.dev/projects/a4c4bf1d-6e06-4bfe-b665-9e15680e4401
 
+## Technologies Used
+
+### Core Technologies
+- **Frontend Framework**: React with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **State Management**: React Query
+
+### AI/ML Components
+- **Image Classification**: HuggingFace Transformers
+  - Model: MobileNetV4 (mobilenetv4_conv_small.e2400_r224_in1k)
+  - Purpose: Crop disease detection and analysis
+  - Implementation: Browser-based inference using WebGPU acceleration
+
+### Key Libraries
+- **Data Fetching**: @tanstack/react-query
+- **Icons**: Lucide React
+- **UI Components**: 
+  - Radix UI primitives
+  - Tailwind CSS animations
+  - Custom shadcn/ui components
+- **PDF Generation**: html2canvas & jspdf
+- **Form Handling**: react-hook-form with zod validation
+
+### Development Tools
+- TypeScript for type safety
+- ESLint for code quality
+- PostCSS for CSS processing
+- Tailwind Typography plugin
+
 ## How can I edit this code?
 
 There are several ways of editing your application.
