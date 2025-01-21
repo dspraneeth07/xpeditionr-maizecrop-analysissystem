@@ -5,7 +5,12 @@ interface AnalysisResult extends DiseaseInfo {
   confidence: number;
 }
 
-const detectDisease = async (imageData: string): Promise<{ label: string; score: number }> => {
+interface ClassificationResult {
+  label: string;
+  score: number;
+}
+
+const detectDisease = async (imageData: string): Promise<ClassificationResult> => {
   console.log("Loading image classification model...");
   
   try {
@@ -20,7 +25,7 @@ const detectDisease = async (imageData: string): Promise<{ label: string; score:
     console.log("Model loaded successfully, processing image...");
     
     const results = await classifier(imageData, {
-      top_k: 1 // Changed from topk to top_k as per the error message
+      top_k: 1
     });
 
     console.log("Classification results:", results);
@@ -29,10 +34,12 @@ const detectDisease = async (imageData: string): Promise<{ label: string; score:
       throw new Error("Invalid classification results");
     }
 
-    // Ensure we return the correct type
+    // Type assertion to handle the classification result
+    const firstResult = results[0] as { label: string; score: number };
+    
     return {
-      label: results[0].label,
-      score: results[0].score
+      label: firstResult.label,
+      score: firstResult.score
     };
   } catch (error) {
     console.error("Error in disease detection:", error);
