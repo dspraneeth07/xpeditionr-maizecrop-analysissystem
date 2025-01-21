@@ -16,7 +16,7 @@ const detectDisease = async (imageData: string): Promise<ClassificationResult> =
   try {
     const classifier = await pipeline(
       "image-classification",
-      "microsoft/resnet-50",  // Using a public pre-trained model
+      "onnx-community/mobilenetv4_conv_small.e2400_r224_in1k",
       { 
         revision: "main"
       } as PretrainedOptions
@@ -34,8 +34,7 @@ const detectDisease = async (imageData: string): Promise<ClassificationResult> =
       throw new Error("Invalid classification results");
     }
 
-    // Type assertion to handle the classification result
-    const firstResult = results[0] as { label: string; score: number };
+    const firstResult = results[0] as ClassificationResult;
     
     return {
       label: firstResult.label,
