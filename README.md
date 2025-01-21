@@ -18,6 +18,38 @@
   - Model: MobileNetV4 (mobilenetv4_conv_small.e2400_r224_in1k)
   - Purpose: Crop disease detection and analysis
   - Implementation: Browser-based inference using WebGPU acceleration
+  - Features:
+    - Real-time disease classification
+    - Confidence scoring
+    - Multi-class disease detection
+    - Optimized for mobile devices
+    - Low-latency inference
+    - Support for various crop types
+
+### Computer Vision Pipeline
+- **Image Preprocessing**:
+  - Resolution standardization (224x224)
+  - Color normalization
+  - Augmentation techniques for better accuracy
+  - WebGPU-accelerated processing
+- **Model Architecture**:
+  - MobileNetV4 backbone
+  - Custom classification head
+  - Optimized for edge devices
+  - Quantized for browser deployment
+
+### Disease Detection Capabilities
+- **Supported Diseases**:
+  - Bacterial Leaf Streak
+  - Common Rust
+  - Gray Leaf Spot
+  - Northern Corn Leaf Blight
+  - Healthy Plant Detection
+- **Analysis Features**:
+  - Disease severity assessment
+  - Affected area calculation
+  - Treatment recommendations
+  - Prevention strategies
 
 ### Key Libraries
 - **Data Fetching**: @tanstack/react-query
@@ -28,12 +60,24 @@
   - Custom shadcn/ui components
 - **PDF Generation**: html2canvas & jspdf
 - **Form Handling**: react-hook-form with zod validation
+- **ML/AI Libraries**:
+  - @huggingface/transformers for model inference
+  - WebGPU acceleration support
+  - Browser-optimized tensor operations
 
 ### Development Tools
 - TypeScript for type safety
 - ESLint for code quality
 - PostCSS for CSS processing
 - Tailwind Typography plugin
+
+### Performance Optimizations
+- WebGPU acceleration for ML inference
+- Lazy loading of ML models
+- Efficient memory management
+- Browser-based processing
+- Optimized image preprocessing
+- Caching strategies for faster inference
 
 ## How can I edit this code?
 
