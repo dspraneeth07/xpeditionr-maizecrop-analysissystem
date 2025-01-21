@@ -1,4 +1,4 @@
-import { pipeline } from "@huggingface/transformers";
+import { pipeline, PretrainedOptions } from "@huggingface/transformers";
 import { allDiseases, DiseaseInfo, DiseaseKey } from "./diseaseDefinitions";
 
 interface AnalysisResult extends DiseaseInfo {
@@ -12,13 +12,15 @@ const detectDisease = async (imageData: string): Promise<{ label: string; score:
     const classifier = await pipeline(
       "image-classification",
       "Xenova/vit-base-patch16-224-in21k-plant-disease",
-      { quantized: true }
+      { 
+        revision: "main"
+      } as PretrainedOptions
     );
 
     console.log("Model loaded successfully, processing image...");
     
     const results = await classifier(imageData, {
-      topk: 1,
+      top_k: 1 // Changed from topk to top_k as per the error message
     });
 
     console.log("Classification results:", results);
@@ -27,7 +29,11 @@ const detectDisease = async (imageData: string): Promise<{ label: string; score:
       throw new Error("Invalid classification results");
     }
 
-    return results[0];
+    // Ensure we return the correct type
+    return {
+      label: results[0].label,
+      score: results[0].score
+    };
   } catch (error) {
     console.error("Error in disease detection:", error);
     throw error;
