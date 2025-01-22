@@ -39,7 +39,7 @@ const teamMembers = [
     
     Beyond research, Sahasra has contributed to AI-driven agricultural tools, developing strategies to improve data quality, annotation, and preprocessing in image recognition systems. She is passionate about creating a knowledge-driven research ecosystem.`,
     expertise: "AI-Assisted Image Processing, Data Preprocessing",
-    image: "https://drive.google.com/file/d/1R1BtKvPjC4MfuBbY1GZcD3W4-ArYt79R/view?usp=sharing"
+    image: "/lovable-uploads/2559058d-e548-4f17-976f-89ce4b264208.png"
   },
   {
     name: "Tanishka Kora",
@@ -51,7 +51,7 @@ const teamMembers = [
     
     As a developer, she is committed to building AI solutions that are not only accurate but also accessible to farmers, making AI-driven agriculture a practical reality.`,
     expertise: "Deep Learning, Neural Networks",
-    image: "https://drive.google.com/file/d/1Dh0zkniKbWqLKtVMwVJNxyD56xvmYaai/view?usp=sharing"
+    image: "/lovable-uploads/23bb7f88-d956-433e-bd63-898b2363342f.png"
   }
 ];
 
@@ -73,7 +73,7 @@ const Team = () => {
               <CardContent className="p-6">
                 <div className="flex flex-col md:flex-row gap-6">
                   <div className="flex-shrink-0">
-                    <div className="w-48 h-48 rounded-full border-4 border-green-500 p-1 mx-auto md:mx-0">
+                    <div className="w-48 h-48 rounded-full border-4 border-green-500 p-1 mx-auto md:mx-0 overflow-hidden">
                       <Avatar className="w-full h-full">
                         <AvatarImage src={member.image} alt={member.name} className="object-cover" />
                         <AvatarFallback>{member.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
