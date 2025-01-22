@@ -106,7 +106,7 @@ const ImageUpload = ({ preview, onImageUpload, onImageRemove }: ImageUploadProps
                 aria-label="Capture image using camera"
               />
               <label htmlFor="capture-input">
-                <Button type="button" variant="outline" className="animate-fade-in" onClick={() => document.getElementById('capture-input')?.click()}>
+                <Button type="button" variant="outline" className="animate-fade-in">
                   <Camera className="mr-2" />
                   Capture Image
                 </Button>
@@ -119,10 +119,11 @@ const ImageUpload = ({ preview, onImageUpload, onImageRemove }: ImageUploadProps
                 className="hidden"
                 onChange={handleFileChange}
                 id="upload-input"
+                capture={undefined}
                 aria-label="Upload image from device"
               />
               <label htmlFor="upload-input">
-                <Button type="button" variant="outline" className="animate-fade-in" onClick={() => document.getElementById('upload-input')?.click()}>
+                <Button type="button" variant="outline" className="animate-fade-in">
                   <Upload className="mr-2" />
                   Upload Image
                 </Button>
